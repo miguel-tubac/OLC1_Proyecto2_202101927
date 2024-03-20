@@ -4,12 +4,18 @@
 
 // ---------> Expresiones Regulares
 entero  [0-9]+;
+numero_decimal ([0-9]+\.[0-9]+);
+comentario (\/\/.*|\/\*[\s\S]*?\*\/);
+id [a-zA-Z][a-zA-Z0-9_]*|[\"][^\n\"]*[\"];
 
 
 %%
 // -----> Reglas Lexicas
 
-{entero}                 { return 'ENTERO'; } 
+{entero}                	 { return 'ENTERO'; }
+{numero_decimal}			 { return 'NUMERODECIMA'; }
+{comentario}				 {}
+{id}						 { return 'ID'; }
 
 // -----> Espacios en Blanco
 [ \s\r\n\t]             {/* Espacios se ignoran */}
@@ -31,11 +37,22 @@ entero  [0-9]+;
 
 %% // ------> Gramatica
 
-inicio
-	: instruccion EOF {$$=$1; return $$;}
+inicio : lista_instrucciones EOF {  }
 ;
 
-instruccion
-	: ENTERO	{$$ = $1;}
-	| error 	{console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
+lista_instrucciones : lista_instrucciones instruccion        {  }
+    | instruccion                   {  }
+;
+
+instruccion : print         {  }   
+	| error PYC 	{console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
+;
+
+
+print : expresion    {  }
+;
+
+expresion : ENTERO    	{ $$ = $1; }
+	| NUMERODECIMA 		{ $$ = $1; }
+    | ID	    		{ $$ = $1; }
 ;

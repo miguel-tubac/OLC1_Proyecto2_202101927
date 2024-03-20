@@ -72,30 +72,30 @@
   }
 */
 var parser = (function(){
-var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o};
+var o=function(k,v,o,l){for(o=o||{},l=k.length;l--;o[k[l]]=v);return o},$V0=[1,5],$V1=[1,7],$V2=[1,8],$V3=[1,9],$V4=[2,5,10,11,12];
 var parser = {trace: function trace () { },
 yy: {},
-symbols_: {"error":2,"inicio":3,"instruccion":4,"EOF":5,"ENTERO":6,"$accept":0,"$end":1},
-terminals_: {2:"error",5:"EOF",6:"ENTERO"},
-productions_: [0,[3,2],[4,1],[4,1]],
+symbols_: {"error":2,"inicio":3,"lista_instrucciones":4,"EOF":5,"instruccion":6,"print":7,"PYC":8,"expresion":9,"ENTERO":10,"NUMERODECIMA":11,"ID":12,"$accept":0,"$end":1},
+terminals_: {2:"error",5:"EOF",8:"PYC",10:"ENTERO",11:"NUMERODECIMA",12:"ID"},
+productions_: [0,[3,2],[4,2],[4,1],[6,1],[6,2],[7,1],[9,1],[9,1],[9,1]],
 performAction: function anonymous(yytext, yyleng, yylineno, yy, yystate /* action[1] */, $$ /* vstack */, _$ /* lstack */) {
 /* this == yyval */
 
 var $0 = $$.length - 1;
 switch (yystate) {
-case 1:
-this.$=$$[$0-1]; return this.$;
+case 1: case 2: case 3: case 4: case 6:
+  
 break;
-case 2:
-this.$ = $$[$0];
-break;
-case 3:
+case 5:
 console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);
+break;
+case 7: case 8: case 9:
+ this.$ = $$[$0]; 
 break;
 }
 },
-table: [{2:[1,4],3:1,4:2,6:[1,3]},{1:[3]},{5:[1,5]},{5:[2,2]},{5:[2,3]},{1:[2,1]}],
-defaultActions: {3:[2,2],4:[2,3],5:[2,1]},
+table: [{2:$V0,3:1,4:2,6:3,7:4,9:6,10:$V1,11:$V2,12:$V3},{1:[3]},{2:$V0,5:[1,10],6:11,7:4,9:6,10:$V1,11:$V2,12:$V3},o($V4,[2,3]),o($V4,[2,4]),{8:[1,12]},o($V4,[2,6]),o($V4,[2,7]),o($V4,[2,8]),o($V4,[2,9]),{1:[2,1]},o($V4,[2,2]),o($V4,[2,5])],
+defaultActions: {10:[2,1]},
 parseError: function parseError (str, hash) {
     if (hash.recoverable) {
         this.trace(str);
@@ -671,18 +671,24 @@ options: {"case-insensitive":true},
 performAction: function anonymous(yy,yy_,$avoiding_name_collisions,YY_START) {
 var YYSTATE=YY_START;
 switch($avoiding_name_collisions) {
-case 0: return 6; 
+case 0: return 10; 
 break;
-case 1:/* Espacios se ignoran */
+case 1: return 11; 
 break;
-case 2:return 5;
+case 2:
 break;
-case 3: console.error('Error léxico: \"' + yy_.yytext + '\", linea: ' + yy_.yylloc.first_line + ', columna: ' + yy_.yylloc.first_column);  
+case 3: return 12; 
+break;
+case 4:/* Espacios se ignoran */
+break;
+case 5:return 5;
+break;
+case 6: console.error('Error léxico: \"' + yy_.yytext + '\", linea: ' + yy_.yylloc.first_line + ', columna: ' + yy_.yylloc.first_column);  
 break;
 }
 },
-rules: [/^(?:([0-9]+))/i,/^(?:[ \s\r\n\t])/i,/^(?:$)/i,/^(?:.)/i],
-conditions: {"INITIAL":{"rules":[0,1,2,3],"inclusive":true}}
+rules: [/^(?:([0-9]+))/i,/^(?:(([0-9]+\.[0-9]+)))/i,/^(?:((\/\/.*|\/\*[\s\S]*?\*\/)))/i,/^(?:([a-zA-Z][a-zA-Z0-9_]*|[\"][^\n\"]*[\"]))/i,/^(?:[ \s\r\n\t])/i,/^(?:$)/i,/^(?:.)/i],
+conditions: {"INITIAL":{"rules":[0,1,2,3,4,5,6],"inclusive":true}}
 });
 return lexer;
 })();
