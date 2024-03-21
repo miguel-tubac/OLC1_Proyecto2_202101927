@@ -10,6 +10,10 @@ class Print extends Instruccion{
 
     interpretar(entorno){
         let valor = this.exprecion.interpretar(null);
+        if (this.exprecion.tipo == "ERROR"){
+            console.log("Error Semantico: No se puede hacer print de errores");
+            return;
+        }
         console.log(valor);
     }
 

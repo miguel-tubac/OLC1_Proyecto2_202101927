@@ -18,4 +18,6 @@ class Dato extends Instruccion{
 
 }
 
+
+
 module.exports = Dato;

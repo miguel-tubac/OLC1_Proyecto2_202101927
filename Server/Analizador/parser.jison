@@ -12,10 +12,19 @@ id [a-zA-Z][a-zA-Z0-9_]*|[\"][^\n\"]*[\"];
 %%
 // -----> Reglas Lexicas
 "cout"                      { return 'COUT'; }
-"endl"                       { return 'ENDL'; }
+"endl"                      { return 'ENDL'; }
+"pow"                       { return 'POW'; }
 
 "<<"                         { return 'DOBLEMENOR'; }
 ";"                          { return 'PUNTOYCOMA'; }
+","                          { return 'COMA'; }
+"("                          { return 'PARENTESIS_A'; }
+")"                          { return 'PARENTESIS_C'; }
+"+"                          { return 'MAS'; }
+"-"                          { return 'MENOS'; }
+"*"                          { return 'MULTI'; }
+"/"                          { return 'DIVICION'; }
+"%"                          { return 'MODULO'; }
 
 {numerodecimal}			     { return 'NUMERODECIMA'; }
 {entero}                	 { return 'ENTERO'; }
@@ -37,9 +46,12 @@ id [a-zA-Z][a-zA-Z0-9_]*|[\"][^\n\"]*[\"];
     //Aqui se inporta todas las clases que se creen para la ejecucion:
     const Dato = require("../Interprete/exprecion/Dato.js");
     const Print = require("../Interprete/instruccion/Principio.js");
+    const Aritmetica = require("../Interprete/exprecion/Aritmetica.js");
 %}
 
-//%left 'MAS' 'MENOS'
+%left 'MAS', 'MENOS' 
+%left 'MULTI', 'DIVICION', 'MODULO'
+%left 'POW'
 
 // -------> Simbolo Inicial
 %start inicio
@@ -66,4 +78,9 @@ print : COUT DOBLEMENOR expresion PUNTOYCOMA                    { $$ = new Print
 expresion : ENTERO    	{ $$ = new Dato($1, 'INT'); }
 	| NUMERODECIMA 		{ $$ = new Dato($1, 'DOUBLE'); }
     | ID	    		{ $$ = new Dato($1, 'STRING'); }
+    | expresion MAS expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | expresion MENOS expresion     { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | expresion MULTI expresion     { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | expresion DIVICION expresion  { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | expresion MODULO expresion    { $$ = new Aritmetica($1 ,$2 ,$3); }
 ;
