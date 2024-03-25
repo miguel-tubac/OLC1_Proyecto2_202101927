@@ -12,9 +12,15 @@ const index = (req,res) => {
 const analizar = (req,res) => {
     //Obtencion de la informacion
     const {entrada} = req.body;//entrada fue la palabra que defini en postman con la que ingrese el dato numerico
+    console.log(entrada);
     let resultado = analizador.parse(entrada);//aca se le esta mandando la entrada que se obtiene del body
+    //let respuesta = "";
 
+    resultado.forEach(element => {
+        element.interpretar(null);
+    });
     //Devuelve informacion
+    //console.log(respuesta);
     res.status(200).json({message: "Funcion Analizar", salida: resultado});//devuelve el resultado al frontend
 }
 

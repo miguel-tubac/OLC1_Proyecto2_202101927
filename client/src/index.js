@@ -1,23 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom';
+import App from './App';
 
-//con esta ruta obtengo los datos del index.html
-const rootElement = document.getElementById('root');
-
-//Este es el elemento root:
-const root = ReactDOM.createRoot(rootElement);
-
-//Creacion de un componente:
-function ArearDeTexto() {
-  return <h1>Hola</h1>
-}
-
-
-//Aca grego los componentes al componente principal:
-//Utlizo la forma set closig tags:
-root.render(
-  <>
-    <ArearDeTexto/>
-    
-  </>
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
 );
