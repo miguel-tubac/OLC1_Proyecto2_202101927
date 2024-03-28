@@ -12,7 +12,7 @@ const index = (req,res) => {
 const analizar = (req,res) => {
     //Obtencion de la informacion
     const {entrada} = req.body;//entrada fue la palabra que defini en postman con la que ingrese el dato numerico
-    console.log(entrada);
+    //console.log(entrada);
     let resultado = analizador.parse(entrada);//aca se le esta mandando la entrada que se obtiene del body
     //let respuesta = "";
 

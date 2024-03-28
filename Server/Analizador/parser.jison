@@ -1,20 +1,36 @@
 // ################### ANALIZADOR LEXICO #######################
+%{
+    var cadena="";
+
+%}
+
 %lex
-%options case-insensitive 
+%options case-insensitive
+%x string 
 
 // ---------> Expresiones Regulares
 numerodecimal ([0-9]+[.][0-9]+);
 entero  [0-9]+;
-comentario (\/\/.*|\/\*[\s\S]*?\*\/);
-id [a-zA-Z][a-zA-Z0-9_]*|[\"][^\n\"]*[\"];
+id [a-zA-Z][a-zA-Z0-9_]*;
 
 
 %%
+
+"//".*							                // comentario de linea
+[/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]                     // comentario multiples lineas
+
 // -----> Reglas Lexicas
+
+//---------METODOS Y FUNCIONES-------------------------
 "cout"                      { return 'COUT'; }
 "endl"                      { return 'ENDL'; }
 "pow"                       { return 'POW'; }
 
+//---------TIPOS DE DATOS------------------------------
+"true"                      { return 'TRUE'  }
+"false"                     { return 'FALSE' }
+
+//---------SIGNOS DEL LENGUAJE-------------------------
 "<<"                         { return 'DOBLEMENOR'; }
 ";"                          { return 'PUNTOYCOMA'; }
 ","                          { return 'COMA'; }
@@ -26,15 +42,27 @@ id [a-zA-Z][a-zA-Z0-9_]*|[\"][^\n\"]*[\"];
 "/"                          { return 'DIVICION'; }
 "%"                          { return 'MODULO'; }
 
+//-------------INDENTIFICADORES-------------------------
 {numerodecimal}			     { return 'NUMERODECIMA'; }
 {entero}                	 { return 'ENTERO'; }
-{comentario}				 {}
 {id}						 { return 'ID'; }
 
-// -----> Espacios en Blanco
+["]                             { cadena=""; this.begin("string"); }
+<string>[^"\\]+                 { cadena+=yytext; }
+<string>"\\\""                  { cadena+="\""; }
+<string>"\\n"                   { cadena+="\n"; }
+<string>\s                      { cadena+=" ";  }
+<string>"\\t"                   { cadena+="\t"; }
+<string>"\\\\"                  { cadena+="\\"; }
+<string>"\\\'"                  { cadena+="\'"; }
+<string>["]                     { yytext=cadena; this.popState(); return 'TEXTO'; }
+
+["\'"]([^"\'"])?["\'"]          { return 'CARACTER' }   
+
+//------------>Espacios en Blanco-----------------------
 [ \s\r\n\t]             {/* Espacios se ignoran */}
 
-// -----> FIN DE CADENA Y ERRORES
+//-----------> FIN DE CADENA Y ERRORES------------------
 <<EOF>>               return 'EOF';
 .  { console.error('Error léxico: \"' + yytext + '\", linea: ' + yylloc.first_line + ', columna: ' + yylloc.first_column);  }
 
@@ -77,7 +105,11 @@ print : COUT DOBLEMENOR expresion PUNTOYCOMA                    { $$ = new Print
 
 expresion : ENTERO    	{ $$ = new Dato($1, 'INT'); }
 	| NUMERODECIMA 		{ $$ = new Dato($1, 'DOUBLE'); }
-    | ID	    		{ $$ = new Dato($1, 'STRING'); }
+    | CARACTER          { $$ = new Dato($1.replace(/^'|'$/g, ''), 'CARACTER'); }
+    | TRUE              { $$ = new Dato($1.toUpperCase(), 'BOOLEAN'); }
+    | FALSE             { $$ = new Dato($1.toUpperCase(), 'BOOLEAN'); }
+    | ID	    		{ $$ = new Dato($1, 'ID'); }
+    | TEXTO	    	{ $$ = new Dato($1, 'STRING'); }
     | expresion MAS expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
     | expresion MENOS expresion     { $$ = new Aritmetica($1 ,$2 ,$3); }
     | expresion MULTI expresion     { $$ = new Aritmetica($1 ,$2 ,$3); }

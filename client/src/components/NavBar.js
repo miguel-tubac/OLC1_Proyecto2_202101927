@@ -2,7 +2,6 @@ import React, { useRef, useState  } from 'react';
 import AreadeTexto1 from './AreadeTexto1';
 import AreadeTexto2 from './AreadeTexto2'
 
-
 const NavBar = () => {
   const fileInputRef = useRef(null);
   const [fileContent, setFileContent] = useState('');
