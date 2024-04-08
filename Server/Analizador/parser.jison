@@ -30,17 +30,31 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 "true"                      { return 'TRUE'  }
 "false"                     { return 'FALSE' }
 
+//---------OPERADORES RELACIONALES---------------------
+"=="                        { return 'DOBLEIGUAL' }
+"="                         { return 'IGUAL' }
+"!="                        { return 'DIFERENCIACION' }
+"<="                        { return 'MENORIGUAL' }
+"<"                         { return 'MENOR' }
+">="                        { return 'MAYORIGUAL' }
+">"                         { return 'MAYOR' }
+
+//---------OPERADORES LOGICOS--------------------------
+"||"                        { return 'OR' }
+"&&"                        { return 'AND' }
+"!"                         { return 'NOT' }
+
 //---------SIGNOS DEL LENGUAJE-------------------------
-"<<"                         { return 'DOBLEMENOR'; }
-";"                          { return 'PUNTOYCOMA'; }
-","                          { return 'COMA'; }
-"("                          { return 'PARENTESIS_A'; }
-")"                          { return 'PARENTESIS_C'; }
-"+"                          { return 'MAS'; }
-"-"                          { return 'MENOS'; }
-"*"                          { return 'MULTI'; }
-"/"                          { return 'DIVICION'; }
-"%"                          { return 'MODULO'; }
+"<<"                        { return 'DOBLEMENOR'; }
+";"                         { return 'PUNTOYCOMA'; }
+","                         { return 'COMA'; }
+"("                         { return 'PARENTESIS_A'; }
+")"                         { return 'PARENTESIS_C'; }
+"+"                         { return 'MAS'; }
+"-"                         { return 'MENOS'; }
+"*"                         { return 'MULTI'; }
+"/"                         { return 'DIVICION'; }
+"%"                         { return 'MODULO'; }
 
 //-------------INDENTIFICADORES-------------------------
 {numerodecimal}			     { return 'NUMERODECIMA'; }
@@ -80,6 +94,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 %left 'MAS', 'MENOS' 
 %left 'MULTI', 'DIVICION', 'MODULO'
 %left 'POW'
+%left umenos
 
 // -------> Simbolo Inicial
 %start inicio
@@ -109,10 +124,12 @@ expresion : ENTERO    	{ $$ = new Dato($1, 'INT'); }
     | TRUE              { $$ = new Dato($1.toUpperCase(), 'BOOLEAN'); }
     | FALSE             { $$ = new Dato($1.toUpperCase(), 'BOOLEAN'); }
     | ID	    		{ $$ = new Dato($1, 'ID'); }
-    | TEXTO	    	{ $$ = new Dato($1, 'STRING'); }
+    | TEXTO	    	    { $$ = new Dato($1, 'STRING'); }
     | expresion MAS expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
     | expresion MENOS expresion     { $$ = new Aritmetica($1 ,$2 ,$3); }
     | expresion MULTI expresion     { $$ = new Aritmetica($1 ,$2 ,$3); }
     | expresion DIVICION expresion  { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | POW PARENTESIS_A expresion COMA expresion PARENTESIS_C { $$ = new Aritmetica($3 ,"pow" ,$5); }
     | expresion MODULO expresion    { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | MENOS expresion  %prec umenos { $$ = new Aritmetica($2 ,"negativo",$2); }
 ;
