@@ -27,25 +27,25 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 "pow"                       { return 'POW'; }
 
 //---------TIPOS DE DATOS------------------------------
-"true"                      { return 'TRUE'  }
-"false"                     { return 'FALSE' }
+"true"                      { return 'TRUE'; }
+"false"                     { return 'FALSE'; }
 
 //---------OPERADORES RELACIONALES---------------------
-"=="                        { return 'DOBLEIGUAL' }
-"="                         { return 'IGUAL' }
-"!="                        { return 'DIFERENCIACION' }
-"<="                        { return 'MENORIGUAL' }
-"<"                         { return 'MENOR' }
-">="                        { return 'MAYORIGUAL' }
-">"                         { return 'MAYOR' }
+"=="                        { return 'DOBLEIGUAL'; }
+"="                         { return 'IGUAL'; }
+"!="                        { return 'DIFERENCIACION'; }
+"<="                        { return 'MENORIGUAL'; }
+"<<"                        { return 'DOBLEMENOR'; }
+"<"                         { return 'MENOR'; }
+">="                        { return 'MAYORIGUAL'; }
+">"                         { return 'MAYOR'; }
 
 //---------OPERADORES LOGICOS--------------------------
-"||"                        { return 'OR' }
-"&&"                        { return 'AND' }
-"!"                         { return 'NOT' }
+"||"                        { return 'OR'; }
+"&&"                        { return 'AND'; }
+"!"                         { return 'NOT'; }
 
 //---------SIGNOS DEL LENGUAJE-------------------------
-"<<"                        { return 'DOBLEMENOR'; }
 ";"                         { return 'PUNTOYCOMA'; }
 ","                         { return 'COMA'; }
 "("                         { return 'PARENTESIS_A'; }
@@ -91,9 +91,14 @@ id [a-zA-Z][a-zA-Z0-9_]*;
     const Aritmetica = require("../Interprete/exprecion/Aritmetica.js");
 %}
 
+%left 'OR'
+%left 'AND'
+%right 'NOT'
+%left 'DOBLEIGUAL', 'DIFERENCIACION', 'MENORIGUAL', 'MENOR', 'MAYORIGUAL', 'MAYOR'
 %left 'MAS', 'MENOS' 
 %left 'MULTI', 'DIVICION', 'MODULO'
 %left 'POW'
+%left 'PARENTESIS_A', 'PARENTESIS_C'
 %left umenos
 
 // -------> Simbolo Inicial
@@ -132,4 +137,10 @@ expresion : ENTERO    	{ $$ = new Dato($1, 'INT'); }
     | POW PARENTESIS_A expresion COMA expresion PARENTESIS_C { $$ = new Aritmetica($3 ,"pow" ,$5); }
     | expresion MODULO expresion    { $$ = new Aritmetica($1 ,$2 ,$3); }
     | MENOS expresion  %prec umenos { $$ = new Aritmetica($2 ,"negativo",$2); }
+    | expresion DOBLEIGUAL expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | expresion DIFERENCIACION expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | expresion MENORIGUAL expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | expresion MENOR expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | expresion MAYORIGUAL expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | expresion MAYOR expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
 ;
