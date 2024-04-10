@@ -1,7 +1,8 @@
 // ################### ANALIZADOR LEXICO #######################
 %{
     var cadena="";
-
+    var listaDeErrores=[];
+    const Error = require("../Interprete/instruccion/Errores.js");
 %}
 
 %lex
@@ -80,8 +81,11 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 
 //-----------> FIN DE CADENA Y ERRORES------------------
 <<EOF>>               return 'EOF';
-.  { console.error('Error léxico: \"' + yytext + '\", linea: ' + yylloc.first_line + ', columna: ' + yylloc.first_column);  }
+.  { var nuevo_error = new Error("Error Léxico","Caracter Incorrecto: "+yytext, yylloc.first_line, yylloc.first_column); listaDeErrores.push(nuevo_error); 
+    console.error('Error léxico: \"' + yytext + '\", linea: ' + yylloc.first_line + ', columna: ' + yylloc.first_column);
+    return 'INVALIDO' }
 
+// console.error('Error léxico: \"' + yytext + '\", linea: ' + yylloc.first_line + ', columna: ' + yylloc.first_column);
 
 /lex
 // ################## ANALIZADOR SINTACTICO ######################
@@ -119,7 +123,8 @@ lista_instrucciones : lista_instrucciones instruccion        { $$ = $1; $$.push(
 ;
 
 instruccion : print         { $$ = $1 }   
-	| error PYC 	        {console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
+	| error PYC 	        { var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
+                            console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
 
@@ -151,4 +156,7 @@ expresion : ENTERO    	{ $$ = new Dato($1, 'INT'); }
     | expresion MAYORIGUAL expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
     | expresion MAYOR expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
     | ternario                        {$$ = $1;}
+    | expresion OR expresion            {  }
+    | expresion AND expresion           {  }
+    | NOT expresion                     {  }
 ;

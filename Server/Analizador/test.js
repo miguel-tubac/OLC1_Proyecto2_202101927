@@ -1,10 +1,11 @@
 const Analizar = require("../Analizador/parser.js");
 const Instruccion = require("../Interprete/Instruccion.js");
-const Ternario = require("../Interprete/exprecion/Ternarios.js");
+//const Ternario = require("../Interprete/exprecion/Ternarios.js");
+const Error = require("../Interprete/instruccion/Errores.js");
 
 let entrada = `
     cout << 10 >= 11;
-    cout << 18 >= 17 ? true : false ;
+    cout << 2 >= 11 ? "23" : "12" ;
 
     //Operadores Relacionales
     /*cout << 1 == 1;

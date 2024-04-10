@@ -1,6 +1,6 @@
 const Instruccion = require("../Instruccion.js");
 
-class ternario extends Instruccion{
+class Ternarios extends Instruccion{
     constructor(condicion, expIzq, expDer){
         super();
         this.condicion = condicion;
@@ -11,16 +11,22 @@ class ternario extends Instruccion{
     }
 
     interpretar(entorno){
+        let valorCondicion = this.condicion.interpretar(null);
         let valorIzq = this.expIzq.interpretar(null);
         let valorDer = this.expDer.interpretar(null);
 
-        //La condicion es True
-        if (this.condicion){
-            return valorIzq;
+        if (valorCondicion){
+            //console.log(valorIzq.tipo);
+            this.tipo = this.expIzq.tipo;
+            this.valor = valorIzq;
+            return this.valor;
         }
         // La condicion es Falsa
-        else if(this.condicion == false){
-            return valorDer;
+        else if(valorCondicion == false){
+            //console.log(this.expDer.tipo);
+            this.tipo = this.expDer.tipo;
+            this.valor = valorDer;
+            return this.valor;
         }
         else{
             this.tipo = "ERROR";
@@ -29,3 +35,5 @@ class ternario extends Instruccion{
         }
     }
 }
+
+module.exports = Ternarios;

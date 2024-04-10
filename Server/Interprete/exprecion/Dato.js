@@ -13,7 +13,10 @@ class Dato extends Instruccion{
             case 'INT': return Number(this.valor);
             case 'DOUBLE': return Number(this.valor);
             case 'STRING': return this.valor;
-            case 'BOOLEAN': return this.valor;
+            case 'BOOLEAN': 
+                if (this.valor == "TRUE")this.valor = true;
+                else if(this.valor == "FALSE")this.valor = false
+                return this.valor;
             case 'CARACTER': return this.valor;
         }
     }
