@@ -31,9 +31,9 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 "false"                     { return 'FALSE'; }
 
 //---------OPERADORES RELACIONALES---------------------
+"!="                        { return 'DIFERENCIACION'; }
 "=="                        { return 'DOBLEIGUAL'; }
 "="                         { return 'IGUAL'; }
-"!="                        { return 'DIFERENCIACION'; }
 "<="                        { return 'MENORIGUAL'; }
 "<<"                        { return 'DOBLEMENOR'; }
 "<"                         { return 'MENOR'; }
@@ -46,6 +46,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 "!"                         { return 'NOT'; }
 
 //---------SIGNOS DEL LENGUAJE-------------------------
+":"                         { return 'DOSPUNTOS'; }
 ";"                         { return 'PUNTOYCOMA'; }
 ","                         { return 'COMA'; }
 "("                         { return 'PARENTESIS_A'; }
@@ -55,6 +56,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 "*"                         { return 'MULTI'; }
 "/"                         { return 'DIVICION'; }
 "%"                         { return 'MODULO'; }
+"?"                         { return 'INTEROGACION'; }
 
 //-------------INDENTIFICADORES-------------------------
 {numerodecimal}			     { return 'NUMERODECIMA'; }
@@ -89,8 +91,10 @@ id [a-zA-Z][a-zA-Z0-9_]*;
     const Dato = require("../Interprete/exprecion/Dato.js");
     const Print = require("../Interprete/instruccion/Principio.js");
     const Aritmetica = require("../Interprete/exprecion/Aritmetica.js");
+    const Ternario = require("../Interprete/exprecion/Ternarios.js");
 %}
 
+%left 'INTEROGACION' cast
 %left 'OR'
 %left 'AND'
 %right 'NOT'
@@ -123,6 +127,9 @@ print : COUT DOBLEMENOR expresion PUNTOYCOMA                    { $$ = new Print
     | COUT DOBLEMENOR expresion DOBLEMENOR ENDL PUNTOYCOMA      {  }
 ;
 
+ternario : expresion INTEROGACION expresion DOSPUNTOS expresion     { $$ = new Ternario($1, $3, $5); }
+;
+
 expresion : ENTERO    	{ $$ = new Dato($1, 'INT'); }
 	| NUMERODECIMA 		{ $$ = new Dato($1, 'DOUBLE'); }
     | CARACTER          { $$ = new Dato($1.replace(/^'|'$/g, ''), 'CARACTER'); }
@@ -143,4 +150,5 @@ expresion : ENTERO    	{ $$ = new Dato($1, 'INT'); }
     | expresion MENOR expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
     | expresion MAYORIGUAL expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
     | expresion MAYOR expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | ternario                        {$$ = $1;}
 ;

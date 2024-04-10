@@ -478,7 +478,7 @@ class Aritmetica extends Instruccion{
                 return this.valor;
             }
             // Caracter == Entero o Caracter == Double o Caracter == caracter = True or False
-            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER"){
+            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER" || this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "BOOLEAN"){
                 this.tipo = 'BOOLEAN';
                 if(valorIzq == valorDer)this.valor = true;
                 else this.valor = false;
@@ -492,7 +492,149 @@ class Aritmetica extends Instruccion{
             }
         }
         else if (this.operador == "!="){
-            //Diferente
+            // Entero == Entero o Entero == Double o Entero == caracter = True or False
+            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT" || this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE"  || this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq != valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Double == Entero o Double == Double o Doble == caracter= True or False
+            else if(this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq != valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Caracter == Entero o Caracter == Double o Caracter == caracter = True or False
+            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER" || this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "BOOLEAN"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq != valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Error de datos
+            else{
+                this.tipo = "ERROR";
+                console.log("Error Semantico: Error de tipo de dato");
+                return this.tipo;
+            }
+        }
+        else if (this.operador == "<"){
+            // Entero == Entero o Entero == Double o Entero == caracter = True or False
+            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT" || this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE"  || this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq < valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Double == Entero o Double == Double o Doble == caracter= True or False
+            else if(this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq < valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Caracter == Entero o Caracter == Double o Caracter == caracter = True or False
+            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER" || this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "BOOLEAN"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq < valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Error de datos
+            else{
+                this.tipo = "ERROR";
+                console.log("Error Semantico: Error de tipo de dato");
+                return this.tipo;
+            }
+        }
+        else if (this.operador == "<="){
+            // Entero == Entero o Entero == Double o Entero == caracter = True or False
+            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT" || this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE"  || this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq <= valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Double == Entero o Double == Double o Doble == caracter= True or False
+            else if(this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq <= valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Caracter == Entero o Caracter == Double o Caracter == caracter = True or False
+            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER" || this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "BOOLEAN"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq <= valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Error de datos
+            else{
+                this.tipo = "ERROR";
+                console.log("Error Semantico: Error de tipo de dato");
+                return this.tipo;
+            }
+        }
+        else if (this.operador == ">"){
+            // Entero == Entero o Entero == Double o Entero == caracter = True or False
+            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT" || this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE"  || this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq > valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Double == Entero o Double == Double o Doble == caracter= True or False
+            else if(this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq > valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Caracter == Entero o Caracter == Double o Caracter == caracter = True or False
+            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER" || this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "BOOLEAN"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq > valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Error de datos
+            else{
+                this.tipo = "ERROR";
+                console.log("Error Semantico: Error de tipo de dato");
+                return this.tipo;
+            }
+        }
+        else if (this.operador == ">="){
+            // Entero == Entero o Entero == Double o Entero == caracter = True or False
+            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT" || this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE"  || this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq >= valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Double == Entero o Double == Double o Doble == caracter= True or False
+            else if(this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq >= valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Caracter == Entero o Caracter == Double o Caracter == caracter = True or False
+            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER" || this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "BOOLEAN"){
+                this.tipo = 'BOOLEAN';
+                if(valorIzq >= valorDer)this.valor = true;
+                else this.valor = false;
+                return this.valor;
+            }
+            // Error de datos
+            else{
+                this.tipo = "ERROR";
+                console.log("Error Semantico: Error de tipo de dato");
+                return this.tipo;
+            }
         }
     }
 }
