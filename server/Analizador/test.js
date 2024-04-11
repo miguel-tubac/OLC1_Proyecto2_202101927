@@ -1,11 +1,11 @@
 const Analizar = require("../Analizador/parser.js");
-const Instruccion = require("../Interprete/Instruccionn.js");
-//const Ternario = require("../Interprete/exprecion/Ternarios.js");
-//const Error = require("../Interprete/instruccion/Errores.js");
+
+//const variables = require("../Interprete/instruccion/Variables.js");
 
 let entrada = `
 
     // Logicos
+    int nombre = 2;
     cout <<  !5>2;
     cout << false && true;
     cout << 10 == 11 || 2==3;

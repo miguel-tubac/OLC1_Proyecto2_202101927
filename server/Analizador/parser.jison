@@ -104,6 +104,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
     const Print = require("../Interprete/instruccion/Principio.js");
     const Aritmetica = require("../Interprete/exprecion/Aritmeticas.js");
     const Ternario = require("../Interprete/exprecion/Ternarios.js");
+    const variables = require("../Interprete/instruccion/Variables.js");
 %}
 
 %left 'INTEROGACION' cast
@@ -137,8 +138,8 @@ instruccion : print         { $$ = $1 }
                             console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
-variables : INT expresion PUNTOYCOMA                            { $$ = new Dato($2, 'IDENTIFICADOR'); }
-    | INT expresion IGUAL expresion PUNTOYCOMA                  {  } 
+variables : INT expresion PUNTOYCOMA                            { $$ = new variables('int', $2, 0); }
+    | INT expresion IGUAL expresion PUNTOYCOMA                  { $$ = new variables('int', $2, $4); } 
 ;
 
 print : COUT DOBLEMENOR expresion PUNTOYCOMA                    { $$ = new Print($3); }

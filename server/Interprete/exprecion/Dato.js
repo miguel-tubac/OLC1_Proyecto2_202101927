@@ -1,4 +1,4 @@
-const Instruccion = require("../Instruccionn.js");
+const Instruccion = require("../Instruccion.js");
 
 class Dato extends Instruccion{
     constructor(valor, tipo){
@@ -18,7 +18,7 @@ class Dato extends Instruccion{
                 else if(this.valor == "FALSE")this.valor = false
                 return this.valor;
             case 'CARACTER': return this.valor;
-            case 'IDENTIFICADOR': return this.valor;
+            case 'ID': return this.valor;
         }
     }
 
