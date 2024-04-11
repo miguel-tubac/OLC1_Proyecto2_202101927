@@ -1,5 +1,5 @@
 const Analizar = require("../Analizador/parser.js");
-const Instruccion = require("../Interprete/Instruccion.js");
+//const Instruccion = require("../Interprete/Instruccionn.js");
 //const Ternario = require("../Interprete/exprecion/Ternarios.js");
 //const Error = require("../Interprete/instruccion/Errores.js");
 

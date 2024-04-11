@@ -1,4 +1,4 @@
-const Instruccion = require("../Instruccion.js");
+const Instruccion = require("../Instruccionn.js");
 
 class Ternarios extends Instruccion{
     constructor(condicion, expIzq, expDer){

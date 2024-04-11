@@ -1,5 +1,5 @@
 
-const Instruccion = require("../Instruccion.js");
+const Instruccion = require("../Instruccionn.js");
 
 class Print extends Instruccion{
     //Para la imprecion se tomara una lista de expreciones

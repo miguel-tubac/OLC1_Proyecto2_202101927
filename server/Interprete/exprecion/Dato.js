@@ -1,4 +1,4 @@
-const Instruccion = require("../Instruccion.js");
+const Instruccion = require("../Instruccionn.js");
 
 class Dato extends Instruccion{
     constructor(valor, tipo){
