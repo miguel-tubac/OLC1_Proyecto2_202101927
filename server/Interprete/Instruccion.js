@@ -1,5 +1,5 @@
 
-class Instruccionn{
+class Instruccion{
     //Metodo constructor
     constructor(){}
 
@@ -10,4 +10,4 @@ class Instruccionn{
 
 }
 
-module.exports = Instruccionn;
+module.exports = Instruccion;

@@ -102,7 +102,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
     //Aqui se inporta todas las clases que se creen para la ejecucion:
     const Dato = require("../Interprete/exprecion/Dato.js");
     const Print = require("../Interprete/instruccion/Principio.js");
-    const Aritmetica = require("../Interprete/exprecion/Aritmetica.js");
+    const Aritmetica = require("../Interprete/exprecion/Aritmeticas.js");
     const Ternario = require("../Interprete/exprecion/Ternarios.js");
 %}
 
