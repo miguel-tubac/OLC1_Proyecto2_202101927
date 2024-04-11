@@ -6,10 +6,10 @@ const Instruccion = require("../Interprete/Instruccion.js");
 let entrada = `
 
     // Logicos
-    /*cout <<  !5>2;
+    cout <<  !5>2;
     cout << false && true;
     cout << 10 == 11 || 2==3;
-    */
+    
 
 
     // Ternarios
