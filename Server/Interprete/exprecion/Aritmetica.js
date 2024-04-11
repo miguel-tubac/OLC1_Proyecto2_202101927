@@ -31,9 +31,9 @@ class Aritmetica extends Instruccion{
             }
             // Entero + Boolean = Entero
             else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "BOOLEAN"){
-                if(this.expDer.valor == "TRUE"){
+                if(this.expDer.valor == true){
                     valorDer = 1;
-                }else if(this.expDer.valor == "FALSE"){
+                }else if(this.expDer.valor == false){
                     valorDer = 0;
                 }
                 this.tipo = 'INT';
@@ -42,9 +42,9 @@ class Aritmetica extends Instruccion{
             }
             // Boolean + Entero = Entero
             else if(this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "INT"){
-                if(this.expIzq.valor == "TRUE"){
+                if(this.expIzq.valor == true){
                     valorIzq = 1;
-                }else if(this.expIzq.valor == "FALSE"){
+                }else if(this.expIzq.valor == false){
                     valorIzq = 0;
                 }
                 this.tipo = 'INT';
@@ -85,9 +85,9 @@ class Aritmetica extends Instruccion{
             }
             // Double + Boolean = Doubel
             else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "BOOLEAN"){
-                if(this.expDer.valor == "TRUE"){
+                if(this.expDer.valor == true){
                     valorDer = 1;
-                }else if(this.expDer.valor == "FALSE"){
+                }else if(this.expDer.valor == false){
                     valorDer = 0;
                 }
                 this.tipo = 'DOUBLE';
@@ -96,9 +96,9 @@ class Aritmetica extends Instruccion{
             }
             // Boolean + Double = Doubel
             else if (this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "DOUBLE"){
-                if(this.expIzq.valor == "TRUE"){
+                if(this.expIzq.valor == true){
                     valorIzq = 1;
-                }else if(this.expIzq.valor == "FALSE"){
+                }else if(this.expIzq.valor == false){
                     valorIzq = 0;
                 }
                 this.tipo = 'DOUBLE';
@@ -107,9 +107,9 @@ class Aritmetica extends Instruccion{
             }
             // Boolean + String = String
             else if (this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "STRING"){
-                if(this.expIzq.valor == "TRUE"){
+                if(this.expIzq.valor == true){
                     valorIzq = 1;
-                }else if(this.expIzq.valor == "FALSE"){
+                }else if(this.expIzq.valor == false){
                     valorIzq = 0;
                 }
                 this.tipo = 'STRING';
@@ -156,9 +156,9 @@ class Aritmetica extends Instruccion{
             } 
             // String + Boolean = String
             else if (this.expIzq.tipo == "STRING" && this.expDer.tipo == "BOOLEAN"){
-                if(this.expDer.valor == "TRUE"){
+                if(this.expDer.valor == true){
                     valorDer = 1;
-                }else if(this.expDer.valor == "FALSE"){
+                }else if(this.expDer.valor == false){
                     valorDer = 0;
                 }
                 this.tipo = 'STRING';
@@ -199,9 +199,9 @@ class Aritmetica extends Instruccion{
             }
             // Entero - Boolean = Entero
             else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "BOOLEAN"){
-                if(this.expDer.valor == "TRUE"){
+                if(this.expDer.valor == true){
                     valorDer = 1;
-                }else if(this.expDer.valor == "FALSE"){
+                }else if(this.expDer.valor == false){
                     valorDer = 0;
                 }
                 this.tipo = 'INT';
@@ -210,9 +210,9 @@ class Aritmetica extends Instruccion{
             }
             // Boolean - Entero = Entero
             else if(this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "INT"){
-                if(this.expIzq.valor == "TRUE"){
+                if(this.expIzq.valor == true){
                     valorIzq = 1;
-                }else if(this.expIzq.valor == "FALSE"){
+                }else if(this.expIzq.valor == false){
                     valorIzq = 0;
                 }
                 this.tipo = 'INT';
@@ -241,9 +241,9 @@ class Aritmetica extends Instruccion{
             }
             // Double - Boolean = Doubel
             else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "BOOLEAN"){
-                if(this.expDer.valor == "TRUE"){
+                if(this.expDer.valor == true){
                     valorDer = 1;
-                }else if(this.expDer.valor == "FALSE"){
+                }else if(this.expDer.valor == false){
                     valorDer = 0;
                 }
                 this.tipo = 'DOUBLE';
@@ -252,9 +252,9 @@ class Aritmetica extends Instruccion{
             }
             // Boolean - Double = Doubel
             else if (this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "DOUBLE"){
-                if(this.expIzq.valor == "TRUE"){
+                if(this.expIzq.valor == true){
                     valorIzq = 1;
-                }else if(this.expIzq.valor == "FALSE"){
+                }else if(this.expIzq.valor == false){
                     valorIzq = 0;
                 }
                 this.tipo = 'DOUBLE';
@@ -627,6 +627,60 @@ class Aritmetica extends Instruccion{
                 this.tipo = 'BOOLEAN';
                 if(valorIzq >= valorDer)this.valor = true;
                 else this.valor = false;
+                return this.valor;
+            }
+            // Error de datos
+            else{
+                this.tipo = "ERROR";
+                console.log("Error Semantico: Error de tipo de dato");
+                return this.tipo;
+            }
+        }
+        else if (this.operador == "||"){
+            if (valorIzq == true || valorDer == true){
+                this.tipo = 'BOOLEAN';
+                this.valor = true;
+                return this.valor;
+            }
+            else if (valorIzq == false && valorDer == false){
+                this.tipo = 'BOOLEAN';
+                this.valor = false;
+                return this.valor;
+            }
+            // Error de datos
+            else{
+                this.tipo = "ERROR";
+                console.log("Error Semantico: Error de tipo de dato");
+                return this.tipo;
+            }
+        }
+        else if (this.operador == "&&"){
+            if (valorIzq == true && valorDer == true){
+                this.tipo = 'BOOLEAN';
+                this.valor = true;
+                return this.valor;
+            }
+            else if (valorIzq == false || valorDer == false){
+                this.tipo = 'BOOLEAN';
+                this.valor = false;
+                return this.valor;
+            }
+            // Error de datos
+            else{
+                this.tipo = "ERROR";
+                console.log("Error Semantico: Error de tipo de dato");
+                return this.tipo;
+            }
+        }
+        else if (this.operador == "!"){
+            if (valorDer == true){
+                this.tipo = 'BOOLEAN';
+                this.valor = false;
+                return this.valor;
+            }
+            else if (valorDer == false){
+                this.tipo = 'BOOLEAN';
+                this.valor = true;
                 return this.valor;
             }
             // Error de datos

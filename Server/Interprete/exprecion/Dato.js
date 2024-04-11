@@ -18,6 +18,7 @@ class Dato extends Instruccion{
                 else if(this.valor == "FALSE")this.valor = false
                 return this.valor;
             case 'CARACTER': return this.valor;
+            case 'IDENTIFICADOR': return this.valor;
         }
     }
 

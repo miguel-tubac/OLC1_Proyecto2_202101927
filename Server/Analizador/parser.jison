@@ -30,6 +30,13 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 //---------TIPOS DE DATOS------------------------------
 "true"                      { return 'TRUE'; }
 "false"                     { return 'FALSE'; }
+"int"                       { return 'INT'; }
+"std"                       { return 'STD'; }
+"string"                    { return 'STRING'; }
+"char"                      { return 'CHAR'; }
+"bool"                      { return 'BOOL'; }
+"double"                    { return 'DOUBLE'; }
+
 
 //---------OPERADORES RELACIONALES---------------------
 "!="                        { return 'DIFERENCIACION'; }
@@ -47,6 +54,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 "!"                         { return 'NOT'; }
 
 //---------SIGNOS DEL LENGUAJE-------------------------
+"::"                        { return 'DOBLEDOSPUNTOS'; }
 ":"                         { return 'DOSPUNTOS'; }
 ";"                         { return 'PUNTOYCOMA'; }
 ","                         { return 'COMA'; }
@@ -115,18 +123,23 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 
 %% // ------> Gramatica
 
-inicio : lista_instrucciones EOF { $$ = $1; return $$; }
+inicio : lista_instrucciones EOF { var final={'errores': listaDeErrores}; $$ = $1, final; listaDeErrores=[] ; return $$; }
+                                //var final={'errores': listaDeErrores}; listaDeErrores=[]; return final;
 ;
 
 lista_instrucciones : lista_instrucciones instruccion        { $$ = $1; $$.push($2); }
     | instruccion                   { $$ = []; $$.push($1); } //aqui se crea una lista de instrucciones y las cuales posteriormente se recorren
 ;
 
-instruccion : print         { $$ = $1 }   
+instruccion : print         { $$ = $1 } 
+    | variables             { $$ = $1 }
 	| error PYC 	        { var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
                             console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
+variables : INT expresion PUNTOYCOMA                            { $$ = new Dato($2, 'IDENTIFICADOR'); }
+    | INT expresion IGUAL expresion PUNTOYCOMA                  {  } 
+;
 
 print : COUT DOBLEMENOR expresion PUNTOYCOMA                    { $$ = new Print($3); }
     | COUT DOBLEMENOR expresion DOBLEMENOR ENDL PUNTOYCOMA      {  }
@@ -156,7 +169,7 @@ expresion : ENTERO    	{ $$ = new Dato($1, 'INT'); }
     | expresion MAYORIGUAL expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
     | expresion MAYOR expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
     | ternario                        {$$ = $1;}
-    | expresion OR expresion            {  }
-    | expresion AND expresion           {  }
-    | NOT expresion                     {  }
+    | expresion OR expresion            { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | expresion AND expresion           { $$ = new Aritmetica($1 ,$2 ,$3); }
+    | NOT expresion                     { $$ = new Aritmetica($2 ,$1 ,$2); }
 ;

@@ -14,6 +14,7 @@ class Ternarios extends Instruccion{
         let valorCondicion = this.condicion.interpretar(null);
         let valorIzq = this.expIzq.interpretar(null);
         let valorDer = this.expDer.interpretar(null);
+        //listaDeErrores.add("nuevo");
 
         if (valorCondicion){
             //console.log(valorIzq.tipo);
