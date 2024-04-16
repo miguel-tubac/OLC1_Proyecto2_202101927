@@ -3,6 +3,7 @@
 //res: es la respuesta que estamos proporcionando
 
 const analizador = require("../Analizador/parser.js")
+const Entorno = require("../Interprete/entorno/Entorno.js")
 
 const index = (req,res) => {
     res.status(200).json({message: "Estoy funcionando"});
@@ -16,8 +17,10 @@ const analizar = (req,res) => {
     let resultado = analizador.parse(entrada);//aca se le esta mandando la entrada que se obtiene del body
     //let respuesta = "";
 
+    //Creacion del entrono Global
+    let entonoGlobal = new Entorno("GLOBAL", null);
     resultado.forEach(element => {
-        element.interpretar(null);
+        element.interpretar(entonoGlobal);
     });
     //Devuelve informacion
     //console.log(respuesta);

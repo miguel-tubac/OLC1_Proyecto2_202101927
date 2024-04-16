@@ -21,4 +21,4 @@ const TipoDato = {
     ERROR: 'ERROR'
 }
 
-module.export = {Expresion, TipoDato};
+module.exports = {Expresion, TipoDato};

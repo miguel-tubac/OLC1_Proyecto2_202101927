@@ -1,38 +1,35 @@
-const Instruccion = require("../Instruccion.js");
+const {Instruccion, TipoInst} = require("../Instruccion");
+const {TipoDato} = require("../Expresion");
 
 class Ternarios extends Instruccion{
-    constructor(condicion, expIzq, expDer){
-        super();
+    constructor(condicion, expIzq, expDer, fila, columna){
+        super("ERROR", TipoInst.ERROR, fila, columna);
         this.condicion = condicion;
         this.expIzq = expIzq;
         this.expDer = expDer;
-        this.tipo = 'ERROR';
-        this.valor = 'null';
     }
 
     interpretar(entorno){
-        let valorCondicion = this.condicion.interpretar(null);
-        let valorIzq = this.expIzq.interpretar(null);
-        let valorDer = this.expDer.interpretar(null);
-        //listaDeErrores.add("nuevo");
+        this.condicion.interpretar(entorno);
+        this.expIzq.interpretar(entorno);
+        this.expDer.interpretar(entorno);
 
-        if (valorCondicion){
-            //console.log(valorIzq.tipo);
+        // La condicion es veradera
+        if (String(this.condicion.valor).toLowerCase() === "true"){
             this.tipo = this.expIzq.tipo;
-            this.valor = valorIzq;
-            return this.valor;
+            this.valor = this.expIzq.valor;
+            return this;
         }
         // La condicion es Falsa
-        else if(valorCondicion == false){
-            //console.log(this.expDer.tipo);
+        else if(String(this.condicion.valor).toLowerCase() === "false"){
             this.tipo = this.expDer.tipo;
-            this.valor = valorDer;
-            return this.valor;
+            this.valor = this.expDer.valor;
+            return this;
         }
         else{
-            this.tipo = "ERROR";
-            console.log("Error Semantico: Error de tipo de dato");
-            return this.tipo;
+            this.tipo = TipoDato.ERROR;
+            console.log("Error Semantico: Error de tipo de dato en ternario");
+            return this;
         }
     }
 }
