@@ -99,12 +99,18 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 // ################## ANALIZADOR SINTACTICO ######################
 // -------> Precedencia
 %{
-    //Aqui se inporta todas las clases que se creen para la ejecucion:
+    //Dato Asociado
+    const {TipoDato} = require("../Interprete/Expresion.js");
+
+    //Expresion:
     const Dato = require("../Interprete/exprecion/Dato.js");
-    const Print = require("../Interprete/instruccion/Principio.js");
     const Aritmetica = require("../Interprete/exprecion/Aritmeticas.js");
     const Ternario = require("../Interprete/exprecion/Ternarios.js");
+
+    //Instruccion:
+    const Print = require("../Interprete/instruccion/Print.js");
     const variables = require("../Interprete/instruccion/Variables.js");
+    const variables1 = require("../Interprete/exprecion/Genvariable.js");
 %}
 
 %left 'INTEROGACION' cast
@@ -138,8 +144,12 @@ instruccion : print         { $$ = $1 }
                             console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
-variables : INT expresion PUNTOYCOMA                            { $$ = new variables('int', $2, 0); }
-    | INT expresion IGUAL expresion PUNTOYCOMA                  { $$ = new variables('int', $2, $4); } 
+variables : INT rep_iden PUNTOYCOMA                         { $$ = new variables('int', $2, 0); }
+    | INT rep_iden IGUAL expresion PUNTOYCOMA               { variables1.agregarDato($2, $4); $$ = new variables('int', $2, $4); } 
+;
+
+rep_iden : rep_iden COMA ID                                 { $$ = $1 ; $$.push(new Dato($3, 'ID')); }
+    | ID                                                    { $$ = [] ;  $$.push(new Dato($1, 'ID')); }
 ;
 
 print : COUT DOBLEMENOR expresion PUNTOYCOMA                    { $$ = new Print($3); }
@@ -149,13 +159,13 @@ print : COUT DOBLEMENOR expresion PUNTOYCOMA                    { $$ = new Print
 ternario : expresion INTEROGACION expresion DOSPUNTOS expresion     { $$ = new Ternario($1, $3, $5); }
 ;
 
-expresion : ENTERO    	{ $$ = new Dato($1, 'INT'); }
-	| NUMERODECIMA 		{ $$ = new Dato($1, 'DOUBLE'); }
-    | CARACTER          { $$ = new Dato($1.replace(/^'|'$/g, ''), 'CARACTER'); }
-    | TRUE              { $$ = new Dato($1.toUpperCase(), 'BOOLEAN'); }
-    | FALSE             { $$ = new Dato($1.toUpperCase(), 'BOOLEAN'); }
-    | ID	    		{ $$ = new Dato($1, 'ID'); }
-    | TEXTO	    	    { $$ = new Dato($1, 'STRING'); }
+expresion : ENTERO    	{ $$ = new Dato($1, TipoDato.INT, @1.first_line, @2.first_column); }
+	| NUMERODECIMA 		{ $$ = new Dato($1, TipoDato.DOUBLE, @1.first_line, @2.first_column); }
+    | CARACTER          { $$ = new Dato($1.replace(/^'|'$/g, ''), TipoDato.CHAR, @1.first_line, @2.first_column); }
+    | TRUE              { $$ = new Dato($1.toLowerCase();, TipoDato.BOOLEAN, @1.first_line, @2.first_column); }
+    | FALSE             { $$ = new Dato($1.toLowerCase();, TipoDato.BOOLEAN, @1.first_line, @2.first_column); }
+    | ID	    		{ $$ = new Dato($1, TipoDato.ID, @1.first_line, @2.first_column); }
+    | TEXTO	    	    { $$ = new Dato($1, TipoDato.CADENA, @1.first_line, @2.first_column); }
     | expresion MAS expresion       { $$ = new Aritmetica($1 ,$2 ,$3); }
     | expresion MENOS expresion     { $$ = new Aritmetica($1 ,$2 ,$3); }
     | expresion MULTI expresion     { $$ = new Aritmetica($1 ,$2 ,$3); }

@@ -1,697 +1,184 @@
-const Instruccion = require("../Instruccion.js");
+const {Expresion, TipoDato} = require("../Expresion");
 
-class Aritmetica extends Instruccion{
-    constructor(expIzq, operador, expDer){
-        super();
+class Arutmeticas extends Expresion{
+
+    constructor(expIzq, operador, expDer, fila, columna){
+        super("ERROR", TipoDato.ERROR, fila, columna);
         this.expIzq = expIzq;
         this.operador = operador;
         this.expDer = expDer;
-        this.tipo = 'ERROR';
-        this.valor = 'null';
     }
 
     interpretar(entorno){
-        let valorIzq = this.expIzq.interpretar(null);
-        let valorDer = this.expDer.interpretar(null);
+        this.expIzq.interpretar(entorno);
+        this.expDer.interpretar(entorno);
 
-        //En esta parte inicia el analisis Semantico
-        //-----------------------------------------SUMA---------------------------------------------
         if(this.operador == "+"){
             // Entero + Entero = Entero
-            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT"){
-                this.tipo = 'INT';
-                this.valor = valorIzq + valorDer;
-                return Number(this.valor);
+            if(this.expIzq.tipo == TipoDato.INT && this.expDer.tipo == TipoDato.INT){
+                this.tipo = TipoDato.INT;
+                this.valor = Number(this.expIzq.valor) + Number(this.expDer.valor);
+                return this;
             }
             // Entero + Double o Double + Entero = Double
-            else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq + valorDer;
-                return Number(this.valor);
+            else if(this.expIzq.tipo == TipoDato.INT && this.expDer.tipo == TipoDato.DOUBLE || this.expIzq.tipo == TipoDato.DOUBLE && this.expDer.tipo == TipoDato.INT){
+                this.tipo = TipoDato.DOUBLE;
+                this.valor = Number(this.expIzq.valor) + Number(this.expDer.valor);
+                return this;
             }
+            //Todo.pendiente de validar true or false
             // Entero + Boolean = Entero
-            else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "BOOLEAN"){
+            else if(this.expIzq.tipo == TipoDato.INT && this.expDer.tipo == TipoDato.BOOLEAN){
                 if(this.expDer.valor == true){
-                    valorDer = 1;
+                    this.expDer.valor = 1;
                 }else if(this.expDer.valor == false){
-                    valorDer = 0;
+                    this.expDer.valor = 0;
                 }
-                this.tipo = 'INT';
-                this.valor = valorIzq + valorDer;
-                return Number(this.valor);
+                this.tipo = TipoDato.INT;
+                this.valor = Number(this.expIzq.valor) + Number(this.expDer.valor);
+                return this;
             }
             // Boolean + Entero = Entero
-            else if(this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "INT"){
+            else if(this.expIzq.tipo == TipoDato.BOOLEAN && this.expDer.tipo == TipoDato.INT){
                 if(this.expIzq.valor == true){
-                    valorIzq = 1;
+                    this.expIzq.valor = 1;
                 }else if(this.expIzq.valor == false){
-                    valorIzq = 0;
+                    this.expIzq.valor = 0;
                 }
-                this.tipo = 'INT';
-                this.valor = valorIzq + valorDer;
-                return Number(this.valor);
+                this.tipo = TipoDato.INT;
+                this.valor = Number(this.expIzq.valor) + Number(this.expDer.valor);
+                return this;
             }
             // Entero + Caracter = Entero
-            else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
-                valorDer = Number(valorDer);
-                this.tipo = 'INT';
-                this.valor = valorIzq + valorDer;
-                return Number(this.valor);
+            else if(this.expIzq.tipo == TipoDato.INT && this.expDer.tipo == TipoDato.CHAR){
+                this.tipo = TipoDato.INT;
+                this.valor = Number(this.expIzq.valor) + Number(this.expDer.valor);
+                return this;
             }
             // Caracter + Entero = Entero
-            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT"){
-                valorIzq = Number(valorIzq);
-                this.tipo = 'INT';
-                this.valor = valorIzq + valorDer;
-                return Number(this.valor);
+            else if(this.expIzq.tipo == TipoDato.CHAR && this.expDer.tipo == TipoDato.INT){
+                this.tipo = TipoDato.INT;
+                this.valor = Number(this.expIzq.valor) + Number(this.expDer.valor);
+                return this;
             }
             // Entero + String = String
-            else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "STRING"){
-                this.tipo = 'STRING';
-                this.valor = valorIzq + valorDer;
-                return this.valor;
+            else if(this.expIzq.tipo == TipoDato.INT && this.expDer.tipo == TipoDato.CADENA){
+                this.tipo = TipoDato.CADENA;
+                this.valor = this.expIzq.valor + this.expDer.valor;
+                return this;
             }
             // String + Entero = String
-            else if(this.expIzq.tipo == "STRING" && this.expDer.tipo == "INT"){
-                this.tipo = 'STRING';
-                this.valor = valorIzq + valorDer;
-                return this.valor;
+            else if(this.expIzq.tipo == TipoDato.CADENA && this.expDer.tipo == TipoDato.INT){
+                this.tipo = TipoDato.CADENA;
+                this.valor = this.expIzq.valor + this.expDer.valor;
+                return this;
             }
             // Double + Doubel = Doubel
-            else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq + valorDer;
-                return Number(this.valor);
+            else if (this.expIzq.tipo == TipoDato.DOUBLE && this.expDer.tipo == TipoDato.DOUBLE){
+                this.tipo = TipoDato.DOUBLE;
+                this.valor = Number(this.expIzq.valor) + Number(this.expDer.valor);
+                return this;
             }
             // Double + Boolean = Doubel
-            else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "BOOLEAN"){
+            else if (this.expIzq.tipo == TipoDato.DOUBLE && this.expDer.tipo == TipoDato.BOOLEAN){
                 if(this.expDer.valor == true){
-                    valorDer = 1;
+                    this.expDer.valor = 1;
                 }else if(this.expDer.valor == false){
-                    valorDer = 0;
+                    this.expDer.valor = 0;
                 }
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq + valorDer;
-                return Number(this.valor);
+                this.tipo = TipoDato.DOUBLE;
+                this.valor = Number(this.expIzq.valor) + Number(this.expDer.valor);
+                return this;
             }
             // Boolean + Double = Doubel
-            else if (this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "DOUBLE"){
+            else if (this.expIzq.tipo == TipoDato.BOOLEAN && this.expDer.tipo == TipoDato.DOUBLE){
                 if(this.expIzq.valor == true){
-                    valorIzq = 1;
+                    this.expIzq.valor = 1;
                 }else if(this.expIzq.valor == false){
-                    valorIzq = 0;
+                    this.expIzq.valor = 0;
                 }
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq + valorDer;
-                return Number(this.valor);
+                this.tipo = TipoDato.DOUBLE;
+                this.valor = Number(this.expIzq.valor) + Number(this.expDer.valor);
+                return this;
             }
             // Boolean + String = String
-            else if (this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "STRING"){
+            else if (this.expIzq.tipo == TipoDato.BOOLEAN && this.expDer.tipo == TipoDato.CADENA){
                 if(this.expIzq.valor == true){
-                    valorIzq = 1;
+                    this.expIzq.valor = 1;
                 }else if(this.expIzq.valor == false){
-                    valorIzq = 0;
+                    this.expIzq.valor = 0;
                 }
-                this.tipo = 'STRING';
-                this.valor = valorIzq + valorDer;
-                return this.valor;
+                this.tipo = TipoDato.CADENA;
+                this.valor = this.expIzq.valor + this.expDer.valor;
+                return this;
             }
             // Doule + Caracter = Double
-            else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
-                valorDer = Number(valorDer);
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq + valorDer;
-                return Number(this.valor);
+            else if (this.expIzq.tipo == TipoDato.DOUBLE && this.expDer.tipo == TipoDato.CHAR){
+                this.tipo = TipoDato.DOUBLE;
+                this.valor = Number(this.expIzq.valor) + Number(this.expDer.valor);
+                return this;
             }
             // Caracter + Caracter = String
-            else if (this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'STRING';
-                this.valor = valorIzq + valorDer;
-                return this.valor;
+            else if (this.expIzq.tipo == TipoDato.CHAR && this.expDer.tipo == TipoDato.CHAR){
+                this.tipo = TipoDato.CADENA;
+                this.valor = this.expIzq.valor + this.expDer.valor;
+                return this;
             }
             // Caracter + String = String
-            else if (this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "STRING"){
-                this.tipo = 'STRING';
-                this.valor = valorIzq + valorDer;
-                return this.valor;
+            else if (this.expIzq.tipo == TipoDato.CHAR && this.expDer.tipo == TipoDato.CADENA){
+                this.tipo = TipoDato.CADENA;
+                this.valor = this.expIzq.valor + this.expDer.valor;
+                return this;
             }
             // Caracter +  Doule = Double
-            else if (this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE"){
-                valorIzq = Number(valorIzq);
+            else if (this.expIzq.tipo == TipoDato.CHAR && this.expDer.tipo == TipoDato.DOUBLE){
                 this.tipo = 'DOUBLE';
-                this.valor = valorIzq + valorDer;
-                return Number(this.valor);
+                this.valor = Number(this.expIzq.valor) + Number(this.expDer.valor);
+                return this;
             }
             // DOUBLE + String = String
-            else if(this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "STRING"){
-                this.tipo = 'STRING';
-                this.valor = valorIzq + valorDer;
-                return this.valor;
+            else if(this.expIzq.tipo == TipoDato.DOUBLE && this.expDer.tipo == TipoDato.CADENA){
+                this.tipo = TipoDato.CADENA;
+                this.valor = this.expIzq.valor + this.expDer.valor;
+                return this;
             }
             // String + DOUBLE = String
-            else if(this.expIzq.tipo == "STRING" && this.expDer.tipo == "DOUBLE"){
-                this.tipo = 'STRING';
-                this.valor = valorIzq + valorDer;
-                return this.valor;
+            else if(this.expIzq.tipo == TipoDato.CADENA && this.expDer.tipo == TipoDato.DOUBLE){
+                this.tipo = TipoDato.CADENA;
+                this.valor = this.expIzq.valor + this.expDer.valor;
+                return this;
             } 
             // String + Boolean = String
-            else if (this.expIzq.tipo == "STRING" && this.expDer.tipo == "BOOLEAN"){
+            else if (this.expIzq.tipo == TipoDato.CADENA && this.expDer.tipo == TipoDato.BOOLEAN){
                 if(this.expDer.valor == true){
-                    valorDer = 1;
+                    this.expDer.valor = 1;
                 }else if(this.expDer.valor == false){
-                    valorDer = 0;
+                    this.expDer.valor = 0;
                 }
-                this.tipo = 'STRING';
-                this.valor = valorIzq + valorDer;
-                return this.valor;
+                this.tipo = TipoDato.CADENA;
+                this.valor = this.expIzq.valor + this.expDer.valor;
+                return this;
             }
             // String + Caracter = String
-            else if(this.expIzq.tipo == "STRING" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'STRING';
-                this.valor = valorIzq + valorDer;
-                return this.valor;
+            else if(this.expIzq.tipo == TipoDato.CADENA && this.expDer.tipo == TipoDato.CHAR){
+                this.tipo = TipoDato.CADENA;
+                this.valor = this.expIzq.valor + this.expDer.valor;
+                return this;
             }
             // String + String = String
-            else if(this.expIzq.tipo == "STRING" && this.expDer.tipo == "STRING"){
-                this.tipo = 'STRING';
-                this.valor = valorIzq + valorDer;
-                return this.valor;
+            else if(this.expIzq.tipo == TipoDato.CADENA && this.expDer.tipo == TipoDato.CADENA){
+                this.tipo = TipoDato.CADENA;
+                this.valor = this.expIzq.valor + this.expDer.valor;
+                return this;
             }   
             // Error de datos
             else{
-                this.tipo = "ERROR";
+                this.tipo = TipoDato.ERROR;
                 console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
+                return this;
             }
         }
-        else if(this.operador == "-"){
-            // Entero - Entero = Entero
-            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT"){
-                this.tipo = 'INT';
-                this.valor = valorIzq - valorDer;
-                return Number(this.valor);
-            }
-            // Entero - Double o Double - Entero = Double
-            else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq - valorDer;
-                return Number(this.valor);
-            }
-            // Entero - Boolean = Entero
-            else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "BOOLEAN"){
-                if(this.expDer.valor == true){
-                    valorDer = 1;
-                }else if(this.expDer.valor == false){
-                    valorDer = 0;
-                }
-                this.tipo = 'INT';
-                this.valor = valorIzq - valorDer;
-                return Number(this.valor);
-            }
-            // Boolean - Entero = Entero
-            else if(this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "INT"){
-                if(this.expIzq.valor == true){
-                    valorIzq = 1;
-                }else if(this.expIzq.valor == false){
-                    valorIzq = 0;
-                }
-                this.tipo = 'INT';
-                this.valor = valorIzq - valorDer;
-                return Number(this.valor);
-            }
-            // Entero - Caracter = Entero
-            else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
-                valorDer = Number(valorDer);
-                this.tipo = 'INT';
-                this.valor = valorIzq - valorDer;
-                return Number(this.valor);
-            }
-            // Caracter - Entero = Entero
-            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT"){
-                valorIzq = Number(valorIzq);
-                this.tipo = 'INT';
-                this.valor = valorIzq - valorDer;
-                return Number(this.valor);
-            }
-            // Double - Doubel = Doubel
-            else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq - valorDer;
-                return Number(this.valor);
-            }
-            // Double - Boolean = Doubel
-            else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "BOOLEAN"){
-                if(this.expDer.valor == true){
-                    valorDer = 1;
-                }else if(this.expDer.valor == false){
-                    valorDer = 0;
-                }
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq - valorDer;
-                return Number(this.valor);
-            }
-            // Boolean - Double = Doubel
-            else if (this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "DOUBLE"){
-                if(this.expIzq.valor == true){
-                    valorIzq = 1;
-                }else if(this.expIzq.valor == false){
-                    valorIzq = 0;
-                }
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq - valorDer;
-                return Number(this.valor);
-            }
-            // Doule - Caracter = Double
-            else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
-                valorDer = Number(valorDer);
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq - valorDer;
-                return Number(this.valor);
-            }
-            // Caracter -  Doule = Double
-            else if (this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE"){
-                valorIzq = Number(valorIzq);
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq - valorDer;
-                return Number(this.valor);
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if(this.operador == "*"){
-            // Entero * Entero = Entero
-            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT"){
-                this.tipo = 'INT';
-                this.valor = valorIzq * valorDer;
-                return Number(this.valor);
-            }
-            // Entero * Double o Double * Entero = Double
-            else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq * valorDer;
-                return Number(this.valor);
-            }
-            // Entero * Caracter = Entero
-            else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
-                valorDer = Number(valorDer);
-                this.tipo = 'INT';
-                this.valor = valorIzq * valorDer;
-                return Number(this.valor);
-            }
-            // Caracter * Entero = Entero
-            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT"){
-                valorIzq = Number(valorIzq);
-                this.tipo = 'INT';
-                this.valor = valorIzq * valorDer;
-                return Number(this.valor);
-            }
-            // Double * Doubel = Doubel
-            else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq * valorDer;
-                return Number(this.valor);
-            }
-            // Doule * Caracter = Double
-            else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
-                valorDer = Number(valorDer);
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq * valorDer;
-                return Number(this.valor);
-            }
-            // Caracter *  Doule = Double
-            else if (this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE"){
-                valorIzq = Number(valorIzq);
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq * valorDer;
-                return Number(this.valor);
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if (this.operador == "/"){
-            // Entero / Entero = DOUBLE
-            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq / valorDer;
-                return Number(this.valor);
-            }
-            // Entero / Double o Double / Entero = Double
-            else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq / valorDer;
-                return Number(this.valor);
-            }
-            // Entero / Caracter = DOUBLE
-            else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
-                valorDer = Number(valorDer);
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq / valorDer;
-                return Number(this.valor);
-            }
-            // Caracter / Entero = DOUBLE
-            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT"){
-                valorIzq = Number(valorIzq);
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq / valorDer;
-                return Number(this.valor);
-            }
-            // Double / Doubel = Doubel
-            else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq / valorDer;
-                return Number(this.valor);
-            }
-            // Doule / Caracter = Double
-            else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
-                valorDer = Number(valorDer);
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq / valorDer;
-                return Number(this.valor);
-            }
-            // Caracter /  Doule = Double
-            else if (this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE"){
-                valorIzq = Number(valorIzq);
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq / valorDer;
-                return Number(this.valor);
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if (this.operador == "pow"){
-            // pow (Entero , Entero) = INT
-            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT"){
-                this.tipo = 'INT';
-                this.valor = valorIzq ** valorDer;
-                return Number(this.valor);
-            }
-            // pow (Entero , Double o Double , Entero) = Double
-            else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq ** valorDer;
-                return Number(this.valor);
-            }
-            //pow ( Double , Doubel) = Doubel
-            else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq ** valorDer;
-                return Number(this.valor);
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if (this.operador == "%"){
-            // Entero % Entero = INT
-            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq % valorDer;
-                return Number(this.valor);
-            }
-            // Entero % Double o Double % Entero = Double
-            else if(this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq % valorDer;
-                return Number(this.valor);
-            }
-            // Double % Doubel = Doubel
-            else if (this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE"){
-                this.tipo = 'DOUBLE';
-                this.valor = valorIzq % valorDer;
-                return Number(this.valor);
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if (this.operador == "negativo"){
-            // - Entero = - Entero
-            if(this.expIzq.tipo == "INT"){
-                this.tipo = 'INT';
-                this.valor = -valorIzq;
-                return Number(this.valor);
-            }
-            // - DOUBLE = - DOUBLE
-            else if(this.expIzq.tipo == "DOUBLE"){
-                this.tipo = 'DOUBLE';
-                this.valor = -valorIzq;
-                return Number(this.valor);
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if (this.operador == "=="){
-            // Entero == Entero o Entero == Double o Entero == caracter = True or False
-            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT" || this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE"  || this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq == valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Double == Entero o Double == Double o Doble == caracter= True or False
-            else if(this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq == valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Caracter == Entero o Caracter == Double o Caracter == caracter = True or False
-            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER" || this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "BOOLEAN"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq == valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if (this.operador == "!="){
-            // Entero == Entero o Entero == Double o Entero == caracter = True or False
-            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT" || this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE"  || this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq != valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Double == Entero o Double == Double o Doble == caracter= True or False
-            else if(this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq != valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Caracter == Entero o Caracter == Double o Caracter == caracter = True or False
-            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER" || this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "BOOLEAN"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq != valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if (this.operador == "<"){
-            // Entero == Entero o Entero == Double o Entero == caracter = True or False
-            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT" || this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE"  || this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq < valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Double == Entero o Double == Double o Doble == caracter= True or False
-            else if(this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq < valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Caracter == Entero o Caracter == Double o Caracter == caracter = True or False
-            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER" || this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "BOOLEAN"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq < valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if (this.operador == "<="){
-            // Entero == Entero o Entero == Double o Entero == caracter = True or False
-            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT" || this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE"  || this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq <= valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Double == Entero o Double == Double o Doble == caracter= True or False
-            else if(this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq <= valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Caracter == Entero o Caracter == Double o Caracter == caracter = True or False
-            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER" || this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "BOOLEAN"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq <= valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if (this.operador == ">"){
-            // Entero == Entero o Entero == Double o Entero == caracter = True or False
-            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT" || this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE"  || this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq > valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Double == Entero o Double == Double o Doble == caracter= True or False
-            else if(this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq > valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Caracter == Entero o Caracter == Double o Caracter == caracter = True or False
-            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER" || this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "BOOLEAN"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq > valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if (this.operador == ">="){
-            // Entero == Entero o Entero == Double o Entero == caracter = True or False
-            if(this.expIzq.tipo == "INT" && this.expDer.tipo == "INT" || this.expIzq.tipo == "INT" && this.expDer.tipo == "DOUBLE"  || this.expIzq.tipo == "INT" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq >= valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Double == Entero o Double == Double o Doble == caracter= True or False
-            else if(this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "INT" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "DOUBLE" && this.expDer.tipo == "CARACTER"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq >= valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Caracter == Entero o Caracter == Double o Caracter == caracter = True or False
-            else if(this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "INT" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "DOUBLE" || this.expIzq.tipo == "CARACTER" && this.expDer.tipo == "CARACTER" || this.expIzq.tipo == "BOOLEAN" && this.expDer.tipo == "BOOLEAN"){
-                this.tipo = 'BOOLEAN';
-                if(valorIzq >= valorDer)this.valor = true;
-                else this.valor = false;
-                return this.valor;
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if (this.operador == "||"){
-            if (valorIzq == true || valorDer == true){
-                this.tipo = 'BOOLEAN';
-                this.valor = true;
-                return this.valor;
-            }
-            else if (valorIzq == false && valorDer == false){
-                this.tipo = 'BOOLEAN';
-                this.valor = false;
-                return this.valor;
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if (this.operador == "&&"){
-            if (valorIzq == true && valorDer == true){
-                this.tipo = 'BOOLEAN';
-                this.valor = true;
-                return this.valor;
-            }
-            else if (valorIzq == false || valorDer == false){
-                this.tipo = 'BOOLEAN';
-                this.valor = false;
-                return this.valor;
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
-        else if (this.operador == "!"){
-            if (valorDer == true){
-                this.tipo = 'BOOLEAN';
-                this.valor = false;
-                return this.valor;
-            }
-            else if (valorDer == false){
-                this.tipo = 'BOOLEAN';
-                this.valor = true;
-                return this.valor;
-            }
-            // Error de datos
-            else{
-                this.tipo = "ERROR";
-                console.log("Error Semantico: Error de tipo de dato");
-                return this.tipo;
-            }
-        }
+
+
     }
 }
-
-
-module.exports = Aritmetica;

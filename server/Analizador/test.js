@@ -1,20 +1,11 @@
 const Analizar = require("../Analizador/parser.js");
-
-//const variables = require("../Interprete/instruccion/Variables.js");
+const {TipoDato} = require("../Interprete/Expresion.js");
 
 let entrada = `
 
     // Logicos
-    int nombre = 2;
-    cout <<  !5>2;
-    cout << false && true;
-    cout << 10 == 11 || 2==3;
-    
-
-
-    // Ternarios
-    //cout << 2 >= 11 ? "23" : "12" ;
-    
+    int e,c = 2;
+    //int a,b,c,d;
 
 `;
 

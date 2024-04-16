@@ -1,29 +1,14 @@
-const Instruccion = require("../Instruccion.js");
+const {Expresion} = require("../Expresion");
 
-class Dato extends Instruccion{
-    constructor(valor, tipo){
-        super();
-        this.tipo = tipo;
-        this.valor = valor;
+class Dato extends Expresion{
+    constructor(valor, tipo, fila, columna){
+        super(valor, tipo, fila, columna);
     }
 
     interpretar(entorno){
-        //casteo de datos
-        switch(this.tipo){
-            case 'INT': return Number(this.valor);
-            case 'DOUBLE': return Number(this.valor);
-            case 'STRING': return this.valor;
-            case 'BOOLEAN': 
-                if (this.valor == "TRUE")this.valor = true;
-                else if(this.valor == "FALSE")this.valor = false
-                return this.valor;
-            case 'CARACTER': return this.valor;
-            case 'ID': return this.valor;
-        }
+        return this //aca se retorna el objeto como tal
     }
 
 }
-
-
 
 module.exports = Dato;

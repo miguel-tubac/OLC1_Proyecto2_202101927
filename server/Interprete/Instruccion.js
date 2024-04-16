@@ -1,7 +1,10 @@
-
 class Instruccion{
     //Metodo constructor
-    constructor(){}
+    constructor(tipo, fila, columna){
+        this.tipo = tipo;
+        this.fila = fila;
+        this.columna = columna;
+    }
 
     interpretar(entorno){}
 
@@ -10,4 +13,9 @@ class Instruccion{
 
 }
 
-module.exports = Instruccion;
+const TipoInst = {
+    PRINT: 'PRINT',
+    IF: 'IF'
+}
+
+module.exports = {Instruccion, TipoInst};
