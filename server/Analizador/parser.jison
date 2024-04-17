@@ -26,6 +26,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 "cout"                      { return 'COUT'; }
 "endl"                      { return 'ENDL'; }
 "pow"                       { return 'POW'; }
+"std"                       { return 'STD'; }
 
 //---------TIPOS DE DATOS------------------------------
 "true"                      { return 'TRUE'; }
@@ -144,8 +145,17 @@ instruccion : print         { $$ = $1 }
                             console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
-variables : INT rep_iden PUNTOYCOMA                         { $$ = new Declarar($2, TipoDato.INT, 0, @1.first_line, @1.first_column); }
-    | INT rep_iden IGUAL expresion PUNTOYCOMA               {  } 
+variables : INT rep_iden PUNTOYCOMA                                     { $$ = new Declarar($2, TipoDato.INT, "ERROR_1", @1.first_line, @1.first_column); }
+    | INT rep_iden IGUAL expresion PUNTOYCOMA                           { $$ = new Declarar($2, TipoDato.INT, $4, @1.first_line, @1.first_column); }
+    | STD DOBLEDOSPUNTOS STRING rep_iden PUNTOYCOMA                     { $$ = new Declarar($4, TipoDato.CADENA, "ERROR_2", @1.first_line, @1.first_column); }
+    | STD DOBLEDOSPUNTOS STRING rep_iden IGUAL expresion PUNTOYCOMA     { $$ = new Declarar($4, TipoDato.CADENA, $6, @1.first_line, @1.first_column); }
+    | CHAR rep_iden PUNTOYCOMA                                          { $$ = new Declarar($2, TipoDato.CHAR, "ERROR_3", @1.first_line, @1.first_column); }
+    | CHAR rep_iden IGUAL expresion PUNTOYCOMA                          { $$ = new Declarar($2, TipoDato.CHAR, $4, @1.first_line, @1.first_column); }
+    | BOOL rep_iden PUNTOYCOMA                                          { $$ = new Declarar($2, TipoDato.BOOLEAN, "ERROR_4", @1.first_line, @1.first_column); }
+    | BOOL rep_iden IGUAL expresion PUNTOYCOMA                          { $$ = new Declarar($2, TipoDato.BOOLEAN, $4, @1.first_line, @1.first_column); }
+    | DOUBLE rep_iden PUNTOYCOMA                                        { $$ = new Declarar($2, TipoDato.DOUBLE, "ERROR_5", @1.first_line, @1.first_column); }
+    | DOUBLE rep_iden IGUAL expresion PUNTOYCOMA                        { $$ = new Declarar($2, TipoDato.DOUBLE, $4, @1.first_line, @1.first_column); }
+    | ID IGUAL expresion PUNTOYCOMA                                     { $$ = new Declarar($1, $3, "RENOMBRAR", @1.first_line, @1.first_column); }
 ;
 
 rep_iden : rep_iden COMA ID                                 { $$ = $1 ; $$.push(new Dato($3, TipoDato.ID, @1.first_line, @1.first_column)); }

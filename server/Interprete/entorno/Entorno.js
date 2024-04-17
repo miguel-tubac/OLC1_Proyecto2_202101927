@@ -31,6 +31,18 @@ class Entorno{
         return new Expresion("ERROR", TipoDato.ERROR, 0, 0);
         //Aca retornar un error
     }
+
+    editarSimbolo(nombre, nuevoValor, fila, columna) {
+        if (nombre in this.tablaSim) {
+            const simbolo = this.tablaSim[nombre];
+            simbolo.valor = nuevoValor;
+            simbolo.fila = fila;
+            simbolo.columna = columna;
+        } else {
+            console.log("Error Semantico: variable no existe en la asignacion.");
+            return;
+        }
+    }
 }
 
 module.exports = Entorno;
