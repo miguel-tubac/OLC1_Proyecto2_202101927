@@ -24,10 +24,11 @@ class Entorno{
         while(ent != null){
             if(!(nombre in ent.tablaSim)){
                 ent = ent.anterior
+            }else{
+                return ent.tablaSim[nombre];
             }
-            return ent.tablaSim[nombre];
         }
-        console.log("Semantico: variable no existe");
+        //console.log("Semantico: variable no existe");
         return new Expresion("ERROR", TipoDato.ERROR, 0, 0);
         //Aca retornar un error
     }

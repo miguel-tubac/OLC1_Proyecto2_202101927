@@ -139,10 +139,13 @@ lista_instrucciones : lista_instrucciones instruccion        { $$ = $1; $$.push(
     | instruccion                   { $$ = []; $$.push($1); } //aqui se crea una lista de instrucciones y las cuales posteriormente se recorren
 ;
 
-instruccion : print         { $$ = $1 } 
+instruccion : cuerpo        { $$ = $1 } 
     | variables             { $$ = $1 }
 	| error PYC 	        { var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
                             console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
+;
+
+cuerpo : print              { $$ = $1 }
 ;
 
 variables : INT rep_iden PUNTOYCOMA                                     { $$ = new Declarar($2, TipoDato.INT, "ERROR_1", @1.first_line, @1.first_column); }
@@ -164,6 +167,9 @@ rep_iden : rep_iden COMA ID                                 { $$ = $1 ; $$.push(
 
 print : COUT DOBLEMENOR expresion PUNTOYCOMA                    { $$ = new Print($3, null, @1.first_line, @1.first_column); }
     | COUT DOBLEMENOR expresion DOBLEMENOR ENDL PUNTOYCOMA      { $$ = new Print($3, TipoDato.ENDL, @1.first_line, @1.first_column); }
+;
+
+casteos : INT ID IGUAL PARENTESIS_A INT PARENTESIS_C expresion PUNTOYCOMA       {  }
 ;
 
 ternario : expresion INTEROGACION expresion DOSPUNTOS expresion     { $$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column); }

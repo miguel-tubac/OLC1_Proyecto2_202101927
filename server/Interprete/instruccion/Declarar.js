@@ -13,14 +13,14 @@ class Declarar extends Instruccion{
 
     interpretar(entorno){
         // Delclaracion del tipo: int a,d,f;
-        if (this.expresion === "ERROR_1"){
+        if (this.expresion === "ERROR_1" && this.tipo === TipoDato.INT){
             //Se recorre el areglo por si hay mas variables declaradas:
             this.id.forEach(element => {
                 entorno.addSimbolo(element.interpretar(entorno).valor, 0, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
             });
         }
         // Declaracion del tipo: int a,d,f = 12;
-        else if(this.expresion.tipo == TipoDato.INT ){
+        else if(this.expresion.tipo === TipoDato.INT && this.tipo === TipoDato.INT){
             // Se interpreta el valor:
             this.expresion.interpretar(entorno);
             // Obtener la longitud del arreglo
@@ -34,13 +34,13 @@ class Declarar extends Instruccion{
                 }
             });
         }
-        else if(this.expresion === "ERROR_2"){
+        else if(this.expresion === "ERROR_2" && this.tipo === TipoDato.CADENA){
             //Se recorre el areglo por si hay mas variables declaradas:
             this.id.forEach(element => {
                 entorno.addSimbolo(element.interpretar(entorno).valor, "", this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
             });
         }
-        else if(this.expresion.tipo == TipoDato.CADENA){
+        else if(this.expresion.tipo === TipoDato.CADENA && this.tipo === TipoDato.CADENA){
             // Se interpreta el valor:
             this.expresion.interpretar(entorno);
             // Obtener la longitud del arreglo
@@ -54,13 +54,13 @@ class Declarar extends Instruccion{
                 }
             });
         }
-        else if(this.expresion === "ERROR_3"){
+        else if(this.expresion === "ERROR_3" && this.tipo === TipoDato.CHAR){
             //Se recorre el areglo por si hay mas variables declaradas:
             this.id.forEach(element => {
                 entorno.addSimbolo(element.interpretar(entorno).valor, '\u0000', this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
             });
         }
-        else if(this.expresion.tipo == TipoDato.CHAR){
+        else if(this.expresion.tipo === TipoDato.CHAR && this.tipo === TipoDato.CHAR){
             // Se interpreta el valor:
             this.expresion.interpretar(entorno);
             // Obtener la longitud del arreglo
@@ -74,13 +74,13 @@ class Declarar extends Instruccion{
                 }
             });
         }
-        else if(this.expresion === "ERROR_4"){
+        else if(this.expresion === "ERROR_4" && this.tipo === TipoDato.BOOLEAN){
             //Se recorre el areglo por si hay mas variables declaradas:
             this.id.forEach(element => {
                 entorno.addSimbolo(element.interpretar(entorno).valor, true, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
             });
         }
-        else if(this.expresion.tipo == TipoDato.BOOLEAN){
+        else if(this.expresion.tipo === TipoDato.BOOLEAN && this.tipo === TipoDato.BOOLEAN){
             // Se interpreta el valor:
             this.expresion.interpretar(entorno);
             // Obtener la longitud del arreglo
@@ -97,13 +97,13 @@ class Declarar extends Instruccion{
                 }
             });
         }
-        else if(this.expresion === "ERROR_5"){
+        else if(this.expresion === "ERROR_5" && this.tipo === TipoDato.DOUBLE){
             //Se recorre el areglo por si hay mas variables declaradas:
             this.id.forEach(element => {
                 entorno.addSimbolo(element.interpretar(entorno).valor, 0.0, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
             });
         }
-        else if(this.expresion.tipo == TipoDato.DOUBLE){
+        else if(this.expresion.tipo === TipoDato.DOUBLE && this.tipo === TipoDato.DOUBLE){
             // Se interpreta el valor:
             this.expresion.interpretar(entorno);
             // Obtener la longitud del arreglo
@@ -152,6 +152,48 @@ class Declarar extends Instruccion{
             else{
                 console.log("ERROR Semantico: en asignacion de tipo de dato con la variable renombrado");
                 return this;
+            }
+        }
+        // Aca se le cambia el valor a una variable, es decir; int a=1; int b = a;
+        else if(this.expresion.tipo === TipoDato.ID ){
+            //console.log("Hola");
+            if (this.tipo == TipoDato.INT && entorno.getSimbolo(this.expresion.valor).tipo == TipoDato.INT){
+                //Se recorre para obtener el valor del arglo de Dato y asignarlo a un nuevo valor
+                this.id.forEach( element => {
+                    //console.log(element.valor);
+                    entorno.addSimbolo(element.valor, Number(entorno.getSimbolo(this.expresion.valor).valor), this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna );
+                    //console.log(entorno.getSimbolo(element.valor));
+                })
+            }
+            else if (this.tipo == TipoDato.CADENA && entorno.getSimbolo(this.expresion.valor).tipo == TipoDato.CADENA){
+                //Se recorre para obtener el valor del arglo de Dato y asignarlo a un nuevo valor
+                this.id.forEach( element => {
+                    //console.log(element.valor);
+                    entorno.addSimbolo(element.valor, String(entorno.getSimbolo(this.expresion.valor).valor), this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna );
+                    //console.log(entorno.getSimbolo(element.valor));
+                })
+            }
+            else if (this.tipo == TipoDato.CHAR && entorno.getSimbolo(this.expresion.valor).tipo == TipoDato.CHAR){
+                //Se recorre para obtener el valor del arglo de Dato y asignarlo a un nuevo valor
+                this.id.forEach( element => {
+                    //console.log(element.valor);
+                    entorno.addSimbolo(element.valor, String(entorno.getSimbolo(this.expresion.valor).valor), this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna );
+                    //console.log(entorno.getSimbolo(element.valor));
+                })
+            }
+            else if (this.tipo == TipoDato.BOOLEAN && entorno.getSimbolo(this.expresion.valor).tipo == TipoDato.BOOLEAN){
+                //Se recorre para obtener el valor del arglo de Dato y asignarlo a un nuevo valor
+                this.id.forEach( element => {
+                    entorno.addSimbolo(element.valor, entorno.getSimbolo(this.expresion.valor).valor, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna );
+                    //console.log(entorno.getSimbolo(element.valor));
+                })
+            }
+            else if (this.tipo == TipoDato.DOUBLE && entorno.getSimbolo(this.expresion.valor).tipo == TipoDato.DOUBLE){
+                //Se recorre para obtener el valor del arglo de Dato y asignarlo a un nuevo valor
+                this.id.forEach( element => {
+                    entorno.addSimbolo(element.valor, Number(entorno.getSimbolo(this.expresion.valor).valor), this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna );
+                    //console.log(entorno.getSimbolo(element.valor));
+                })
             }
         }
         else{

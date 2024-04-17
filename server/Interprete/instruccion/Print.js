@@ -1,5 +1,6 @@
 const {TipoDato} = require("../Expresion");
 const {Instruccion, TipoInst} = require("../Instruccion");
+//const {TipoSimbolo} = require("../entorno/Simbolo");
 
 class Print extends Instruccion{
 
@@ -10,10 +11,19 @@ class Print extends Instruccion{
     }
 
     interpretar(entorno){
+        //console.log(entorno.getSimbolo(this.expresion.valor));
         this.expresion.interpretar(entorno);
         if (this.expresion.tipo != TipoDato.ERROR){
-            //console.log(informacion);
-            return this;
+            let dato = entorno.getSimbolo(this.expresion.valor);
+            if (dato.tipo == TipoDato.ERROR){
+                return this;
+            }
+            else if(dato.tipo != TipoDato.ERROR){
+                //console.log(dato.valor);
+                this.expresion.valor = dato.valor;
+                return this;
+            }
+            
         }else{
             //Todo recordar de comentar esto
             console.log("Error, no se puede imprimir errores");
