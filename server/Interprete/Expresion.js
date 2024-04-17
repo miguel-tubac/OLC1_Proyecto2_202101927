@@ -18,6 +18,7 @@ const TipoDato = {
     CHAR: 'CHAR',
     ID: 'ID',
     CADENA: 'CADENA',
+    ENDL: 'ENDL',
     ERROR: 'ERROR'
 }
 

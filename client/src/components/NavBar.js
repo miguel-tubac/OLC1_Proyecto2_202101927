@@ -44,7 +44,7 @@ const NavBar = () => {
       .then(response => response.json())
       .then(data => {
           // Procesa la respuesta del backend para obtener solo el texto
-        let resultado = data.salida.map(element => element.exprecion.valor).join('\n');
+        let resultado = data.salida.consola;//.join('\n')
         console.log('Respuesta del backend:', resultado);
         // Actualiza el estado de AreadeTexto2 con la respuesta del backend
         setResponseContent(resultado);

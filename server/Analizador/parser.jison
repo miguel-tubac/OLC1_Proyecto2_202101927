@@ -162,8 +162,8 @@ rep_iden : rep_iden COMA ID                                 { $$ = $1 ; $$.push(
     | ID                                                    { $$ = [] ;  $$.push(new Dato($1, TipoDato.ID, @1.first_line, @1.first_column)); }
 ;
 
-print : COUT DOBLEMENOR expresion PUNTOYCOMA                    { $$ = new Print($3, @1.first_line, @1.first_column); }
-    | COUT DOBLEMENOR expresion DOBLEMENOR ENDL PUNTOYCOMA      {  }
+print : COUT DOBLEMENOR expresion PUNTOYCOMA                    { $$ = new Print($3, null, @1.first_line, @1.first_column); }
+    | COUT DOBLEMENOR expresion DOBLEMENOR ENDL PUNTOYCOMA      { $$ = new Print($3, TipoDato.ENDL, @1.first_line, @1.first_column); }
 ;
 
 ternario : expresion INTEROGACION expresion DOSPUNTOS expresion     { $$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column); }

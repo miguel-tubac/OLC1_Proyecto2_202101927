@@ -139,10 +139,10 @@ case 19:
  this.$ = [] ;  this.$.push(new Dato($$[$0], TipoDato.ID, _$[$0].first_line, _$[$0].first_column)); 
 break;
 case 20:
- this.$ = new Print($$[$0-1], _$[$0-3].first_line, _$[$0-3].first_column); 
+ this.$ = new Print($$[$0-1], null, _$[$0-3].first_line, _$[$0-3].first_column); 
 break;
 case 21:
-  
+ this.$ = new Print($$[$0-3], TipoDato.ENDL, _$[$0-5].first_line, _$[$0-5].first_column); 
 break;
 case 22:
  this.$ = new Ternario($$[$0-4], $$[$0-2], $$[$0], _$[$0-4].first_line, _$[$0-4].first_column); 

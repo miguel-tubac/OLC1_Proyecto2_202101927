@@ -1,37 +1,28 @@
 const Analizar = require("./parser.js");
 const Entorno = require("../Interprete/entorno/Entorno.js")
+const {TipoDato} = require("../Interprete/Expresion.js");
 
 
 
 
 let entrada = `
-    /*
-    int a;
-    a = 4;
-    int a = 12;
-    int w,er,df= 12;
-    std::string cadena;
-    std::string nombre,migu = "hola";
-    cadena = "miguel";
-    char var4;
-    char var,var2,var5 = 'd';
-    var4 = 'j';
-    var4 = 'm';
-    bool num;
-    bool dos, tres, cuatr = false;
-    num = true;
-    double aa;
-    double b,c,d = 12.2;
-    aa = 12.2;
-    */
-
+    cout << "dos";
+    cout << "MMMM" << endl;
+    cout << "asdd";
 `;
 
-
+var devuelve="";
 let resultado = Analizar.parse(entrada);
 
 let entonoGlobal = new Entorno("GLOBAL", null);
 resultado.forEach(element => {
-    element.interpretar(entonoGlobal);
+    if (element.interpretar(entonoGlobal).tipo === "PRINT"){
+        if (element.interpretar(entonoGlobal).endl == TipoDato.ENDL){
+            devuelve += element.interpretar(entonoGlobal).expresion.valor + "\n";
+        }else{
+            devuelve += element.interpretar(entonoGlobal).expresion.valor;
+        }
+    }
 });
 
+console.log(devuelve);
