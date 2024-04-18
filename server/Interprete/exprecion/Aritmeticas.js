@@ -1568,6 +1568,205 @@ class Arutmeticas extends Expresion{
                 else this.valor = false;
                 return this;
             }
+            //Todo: Aca irian validaciones extras de la tabla variables.word
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.ID){
+                //console.log("Hola");
+                var izquierdo = entorno.getSimbolo(this.expIzq.valor);
+                var derecho = entorno.getSimbolo(this.expDer.valor);
+
+                if(izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) == Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                else if(izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) == Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                else if(izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.CHAR || izquierdo.tipo === TipoDato.BOOLEAN && derecho.tipo === TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) == Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                // Error de datos
+                else{
+                    this.tipo = TipoDato.ERROR;
+                    console.log("Error Semantico: Error de tipo de dato en variables");
+                    return this;
+                }
+            }
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.INT){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) == Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) == Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) == Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.INT && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) == Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) == Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) == Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.DOUBLE){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) == Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) == Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) == Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.DOUBLE && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) == Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) == Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) == Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.BOOLEAN){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (String(this.expDer.valor).toLowerCase() === "true") this.expDer.valor = true;
+                    else if (String(this.expDer.valor).toLowerCase() === "false") this.expDer.valor = false;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) == Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.BOOLEAN && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (String(this.expIzq.valor).toLowerCase() === "true") this.expIzq.valor = true;
+                    else if (String(this.expIzq.valor).toLowerCase() === "false")this.expIzq.valor = false;
+                    if (Number(this.expIzq.valor) == Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.CHAR){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) == Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) == Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) == Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.CHAR && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) == Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) == Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) == Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
             // Error de datos
             else{
                 this.tipo = TipoDato.ERROR;
@@ -1597,6 +1796,205 @@ class Arutmeticas extends Expresion{
                 else this.valor = false;
                 return this;
             }
+            //Todo: Aca irian validaciones extras de la tabla variables.word
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.ID){
+                //console.log("Hola");
+                var izquierdo = entorno.getSimbolo(this.expIzq.valor);
+                var derecho = entorno.getSimbolo(this.expDer.valor);
+
+                if(izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) != Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                else if(izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) != Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                else if(izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.CHAR || izquierdo.tipo === TipoDato.BOOLEAN && derecho.tipo === TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) != Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                // Error de datos
+                else{
+                    this.tipo = TipoDato.ERROR;
+                    console.log("Error Semantico: Error de tipo de dato en variables");
+                    return this;
+                }
+            }
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.INT){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) != Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) != Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) != Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.INT && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) != Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) != Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) != Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.DOUBLE){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) != Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) != Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) != Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.DOUBLE && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) != Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) != Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) != Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.BOOLEAN){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (String(this.expDer.valor).toLowerCase() === "true") this.expDer.valor = true;
+                    else if (String(this.expDer.valor).toLowerCase() === "false") this.expDer.valor = false;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) != Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.BOOLEAN && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (String(this.expIzq.valor).toLowerCase() === "true") this.expIzq.valor = true;
+                    else if (String(this.expIzq.valor).toLowerCase() === "false")this.expIzq.valor = false;
+                    if (Number(this.expIzq.valor) != Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.CHAR){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) != Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) != Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) != Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.CHAR && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) != Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) != Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) != Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
             // Error de datos
             else{
                 this.tipo = TipoDato.ERROR;
@@ -1626,6 +2024,205 @@ class Arutmeticas extends Expresion{
                 else this.valor = false;
                 return this;
             }
+            //Todo: Aca irian validaciones extras de la tabla variables.word
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.ID){
+                //console.log("Hola");
+                var izquierdo = entorno.getSimbolo(this.expIzq.valor);
+                var derecho = entorno.getSimbolo(this.expDer.valor);
+
+                if(izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) < Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                else if(izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) < Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                else if(izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.CHAR || izquierdo.tipo === TipoDato.BOOLEAN && derecho.tipo === TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) < Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                // Error de datos
+                else{
+                    this.tipo = TipoDato.ERROR;
+                    console.log("Error Semantico: Error de tipo de dato en variables");
+                    return this;
+                }
+            }
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.INT){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) < Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) < Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) < Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.INT && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) < Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) < Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) < Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.DOUBLE){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) < Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) < Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) < Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.DOUBLE && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) < Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) < Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) < Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.BOOLEAN){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (String(this.expDer.valor).toLowerCase() === "true") this.expDer.valor = true;
+                    else if (String(this.expDer.valor).toLowerCase() === "false") this.expDer.valor = false;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) < Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.BOOLEAN && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (String(this.expIzq.valor).toLowerCase() === "true") this.expIzq.valor = true;
+                    else if (String(this.expIzq.valor).toLowerCase() === "false")this.expIzq.valor = false;
+                    if (Number(this.expIzq.valor) < Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.CHAR){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) < Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) < Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) < Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.CHAR && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) < Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) < Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) < Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
             // Error de datos
             else{
                 this.tipo = TipoDato.ERROR;
@@ -1655,6 +2252,205 @@ class Arutmeticas extends Expresion{
                 else this.valor = false;
                 return this;
             }
+            //Todo: Aca irian validaciones extras de la tabla variables.word
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.ID){
+                //console.log("Hola");
+                var izquierdo = entorno.getSimbolo(this.expIzq.valor);
+                var derecho = entorno.getSimbolo(this.expDer.valor);
+
+                if(izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) <= Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                else if(izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) <= Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                else if(izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.CHAR || izquierdo.tipo === TipoDato.BOOLEAN && derecho.tipo === TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) <= Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                // Error de datos
+                else{
+                    this.tipo = TipoDato.ERROR;
+                    console.log("Error Semantico: Error de tipo de dato en variables");
+                    return this;
+                }
+            }
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.INT){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) <= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) <= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) <= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.INT && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) <= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) <= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) <= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.DOUBLE){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) <= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) <= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) <= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.DOUBLE && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) <= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) <= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) <= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.BOOLEAN){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (String(this.expDer.valor).toLowerCase() === "true") this.expDer.valor = true;
+                    else if (String(this.expDer.valor).toLowerCase() === "false") this.expDer.valor = false;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) <= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.BOOLEAN && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (String(this.expIzq.valor).toLowerCase() === "true") this.expIzq.valor = true;
+                    else if (String(this.expIzq.valor).toLowerCase() === "false")this.expIzq.valor = false;
+                    if (Number(this.expIzq.valor) <= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.CHAR){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) <= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) <= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) <= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.CHAR && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) <= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) <= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) <= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
             // Error de datos
             else{
                 this.tipo = TipoDato.ERROR;
@@ -1684,6 +2480,205 @@ class Arutmeticas extends Expresion{
                 else this.valor = false;
                 return this;
             }
+            //Todo: Aca irian validaciones extras de la tabla variables.word
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.ID){
+                //console.log("Hola");
+                var izquierdo = entorno.getSimbolo(this.expIzq.valor);
+                var derecho = entorno.getSimbolo(this.expDer.valor);
+
+                if(izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) > Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                else if(izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) > Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                else if(izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.CHAR || izquierdo.tipo === TipoDato.BOOLEAN && derecho.tipo === TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) > Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                // Error de datos
+                else{
+                    this.tipo = TipoDato.ERROR;
+                    console.log("Error Semantico: Error de tipo de dato en variables");
+                    return this;
+                }
+            }
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.INT){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) > Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) > Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) > Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.INT && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) > Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) > Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) > Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.DOUBLE){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) > Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) > Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) > Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.DOUBLE && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) > Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) > Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) > Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.BOOLEAN){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (String(this.expDer.valor).toLowerCase() === "true") this.expDer.valor = true;
+                    else if (String(this.expDer.valor).toLowerCase() === "false") this.expDer.valor = false;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) > Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.BOOLEAN && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (String(this.expIzq.valor).toLowerCase() === "true") this.expIzq.valor = true;
+                    else if (String(this.expIzq.valor).toLowerCase() === "false")this.expIzq.valor = false;
+                    if (Number(this.expIzq.valor) > Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.CHAR){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) > Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) > Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) > Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.CHAR && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) > Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) > Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) > Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
             // Error de datos
             else{
                 this.tipo = TipoDato.ERROR;
@@ -1713,6 +2708,205 @@ class Arutmeticas extends Expresion{
                 else this.valor = false;
                 return this;
             }
+            //Todo: Aca irian validaciones extras de la tabla variables.word
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.ID){
+                //console.log("Hola");
+                var izquierdo = entorno.getSimbolo(this.expIzq.valor);
+                var derecho = entorno.getSimbolo(this.expDer.valor);
+
+                if(izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.INT && derecho.tipo === TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) >= Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                else if(izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.DOUBLE && derecho.tipo === TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) >= Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                else if(izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.INT || izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.DOUBLE || izquierdo.tipo === TipoDato.CHAR && derecho.tipo === TipoDato.CHAR || izquierdo.tipo === TipoDato.BOOLEAN && derecho.tipo === TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if(Number(izquierdo.valor) >= Number(derecho.valor))this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                // Error de datos
+                else{
+                    this.tipo = TipoDato.ERROR;
+                    console.log("Error Semantico: Error de tipo de dato en variables");
+                    return this;
+                }
+            }
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.INT){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) >= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) >= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) >= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.INT && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) >= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) >= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) >= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.DOUBLE){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) >= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) >= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) >= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.DOUBLE && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) >= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) >= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) >= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.BOOLEAN){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (String(this.expDer.valor).toLowerCase() === "true") this.expDer.valor = true;
+                    else if (String(this.expDer.valor).toLowerCase() === "false") this.expDer.valor = false;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) >= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.BOOLEAN && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (String(this.expIzq.valor).toLowerCase() === "true") this.expIzq.valor = true;
+                    else if (String(this.expIzq.valor).toLowerCase() === "false")this.expIzq.valor = false;
+                    if (Number(this.expIzq.valor) >= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.CHAR){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) >= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.double == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.DOUBLE){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) >= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(id.char == int)
+                else if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(entorno.getSimbolo(this.expIzq.valor).valor) >= Number(this.expDer.valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.CHAR && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.INT){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) >= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.double)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) >= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+                //(int == id.char)
+                else if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.CHAR){
+                    this.tipo = TipoDato.BOOLEAN;
+                    if (Number(this.expIzq.valor) >= Number(entorno.getSimbolo(this.expDer.valor).valor)) this.valor = true;
+                    else this.valor = false;
+                    return this;
+                }
+            }
+            //fin
             // Error de datos
             else{
                 this.tipo = TipoDato.ERROR;
@@ -1721,7 +2915,7 @@ class Arutmeticas extends Expresion{
             }
         }
         else if (this.operador == "||"){
-            String(this.expIzq.valor).toLowerCase()
+            //String(this.expIzq.valor).toLowerCase()
             if (String(this.expIzq.valor).toLowerCase() === "true" || String(this.expDer.valor).toLowerCase() === "true"){
                 this.tipo = TipoDato.BOOLEAN;
                 this.valor = true;
@@ -1732,6 +2926,65 @@ class Arutmeticas extends Expresion{
                 this.valor = false;
                 return this;
             }
+            //Todo: Aca irian validaciones extras de la tabla variables.word
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.ID){
+                //console.log("Hola");
+                var izquierdo = entorno.getSimbolo(this.expIzq.valor);
+                var derecho = entorno.getSimbolo(this.expDer.valor);
+
+                if(izquierdo.valor === true || derecho.valor === true){
+                    this.tipo = TipoDato.BOOLEAN;
+                    this.valor = true;
+                    return this;
+                }
+                else if(izquierdo.valor === false && derecho.valor === false){
+                    this.tipo = TipoDato.BOOLEAN;
+                    this.valor = false;
+                    return this;
+                }
+                // Error de datos
+                else{
+                    this.tipo = TipoDato.ERROR;
+                    console.log("Error Semantico: Error de tipo de dato en variables");
+                    return this;
+                }
+            }
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.BOOLEAN){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.BOOLEAN){
+                    if (String(this.expDer.valor).toLowerCase() === "true") this.expDer.valor = true;
+                    else if (String(this.expDer.valor).toLowerCase() === "false") this.expDer.valor = false;
+                    if (entorno.getSimbolo(this.expIzq.valor).valor == true || this.expDer.valor == true){
+                        this.tipo = TipoDato.BOOLEAN;
+                        this.valor = true;
+                        return this;
+                    }
+                    else if (entorno.getSimbolo(this.expIzq.valor).valor == false && this.expDer.valor == false){
+                        this.tipo = TipoDato.BOOLEAN;
+                        this.valor = false;
+                        return this;
+                    }
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.BOOLEAN && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    if (String(this.expIzq.valor).toLowerCase() === "true")this.expIzq.valor = true;
+                    else if (String(this.expIzq.valor).toLowerCase() === "false")this.expIzq.valor = false;
+                    if (this.expIzq.valor == true || entorno.getSimbolo(this.expDer.valor).valor == true){
+                        this.tipo = TipoDato.BOOLEAN;
+                        this.valor = true;
+                        return this;
+                    }
+                    else if (this.expIzq.valor == false && entorno.getSimbolo(this.expDer.valor).valor == false){
+                        this.tipo = TipoDato.BOOLEAN;
+                        this.valor = false;
+                        return this;
+                    }
+                }
+            }
+            //fin
             // Error de datos
             else{
                 this.tipo = TipoDato.ERROR;
@@ -1750,6 +3003,65 @@ class Arutmeticas extends Expresion{
                 this.valor = false;
                 return this;
             }
+            //Todo: Aca irian validaciones extras de la tabla variables.word
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.ID){
+                //console.log("Hola");
+                var izquierdo = entorno.getSimbolo(this.expIzq.valor);
+                var derecho = entorno.getSimbolo(this.expDer.valor);
+
+                if(izquierdo.valor === true && derecho.valor === true){
+                    this.tipo = TipoDato.BOOLEAN;
+                    this.valor = true;
+                    return this;
+                }
+                else if(izquierdo.valor === false || derecho.valor === false){
+                    this.tipo = TipoDato.BOOLEAN;
+                    this.valor = false;
+                    return this;
+                }
+                // Error de datos
+                else{
+                    this.tipo = TipoDato.ERROR;
+                    console.log("Error Semantico: Error de tipo de dato en variables");
+                    return this;
+                }
+            }
+            // Inicio columna: -----int------ a == 2 (id == int)
+            else if(this.expIzq.tipo == TipoDato.ID && this.expDer.tipo == TipoDato.BOOLEAN){
+                //(id.int == int)
+                if(entorno.getSimbolo(this.expIzq.valor).tipo == TipoDato.BOOLEAN){
+                    if (String(this.expDer.valor).toLowerCase() === "true") this.expDer.valor = true;
+                    else if (String(this.expDer.valor).toLowerCase() === "false") this.expDer.valor = false;
+                    if (entorno.getSimbolo(this.expIzq.valor).valor == true && this.expDer.valor == true){
+                        this.tipo = TipoDato.BOOLEAN;
+                        this.valor = true;
+                        return this;
+                    }
+                    else if (entorno.getSimbolo(this.expIzq.valor).valor == false || this.expDer.valor == false){
+                        this.tipo = TipoDato.BOOLEAN;
+                        this.valor = false;
+                        return this;
+                    }
+                }
+            }       // 2 == a (int == id)
+            else if(this.expIzq.tipo == TipoDato.BOOLEAN && this.expDer.tipo == TipoDato.ID){
+                //(int == id.in)
+                if(entorno.getSimbolo(this.expDer.valor).tipo == TipoDato.BOOLEAN){
+                    if (String(this.expIzq.valor).toLowerCase() === "true")this.expIzq.valor = true;
+                    else if (String(this.expIzq.valor).toLowerCase() === "false")this.expIzq.valor = false;
+                    if (this.expIzq.valor == true && entorno.getSimbolo(this.expDer.valor).valor == true){
+                        this.tipo = TipoDato.BOOLEAN;
+                        this.valor = true;
+                        return this;
+                    }
+                    else if (this.expIzq.valor == false || entorno.getSimbolo(this.expDer.valor).valor == false){
+                        this.tipo = TipoDato.BOOLEAN;
+                        this.valor = false;
+                        return this;
+                    }
+                }
+            }
+            //fin
             // Error de datos
             else{
                 this.tipo = TipoDato.ERROR;
@@ -1772,16 +3084,14 @@ class Arutmeticas extends Expresion{
             else if(this.expDer.tipo == TipoDato.ID){
                 var derecho = entorno.getSimbolo(this.expDer.valor);
 
-                if(derecho == true){
-                    //console.log("Hola2");
-                    this.tipo = TipoDato.DOUBLE;
-                    this.valor = izquierdo.valor % derecho.valor;
+                if(derecho.valor == true){
+                    this.tipo = TipoDato.BOOLEAN;
+                    this.valor = false;
                     return this;
                 }
-                else if(derecho == false){
-                    //console.log("Hola2");
-                    this.tipo = TipoDato.DOUBLE;
-                    this.valor = izquierdo.valor % derecho.valor;
+                else if(derecho.valor == false){
+                    this.tipo = TipoDato.BOOLEAN;
+                    this.valor = true;
                     return this;
                 }
                 // Error de datos

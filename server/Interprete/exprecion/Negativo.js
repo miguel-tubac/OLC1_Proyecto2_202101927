@@ -21,6 +21,18 @@ class Negativo extends Expresion{
             this.valor = -1 * this.expresion.valor;
             return this;
         }
+        else if (this.expresion.tipo == TipoDato.ID){
+            if(entorno.getSimbolo(this.expresion.valor).tipo == TipoDato.INT){//&& this.valor.tipo == TipoDato.INT
+                this.tipo = TipoDato.INT;
+                this.valor = -1 * entorno.getSimbolo(this.expresion.valor).valor
+                return this;
+            }
+            else if(entorno.getSimbolo(this.expresion.valor).tipo == TipoDato.DOUBLE){
+                this.tipo = TipoDato.DOUBLE;
+                this.valor = -1 * entorno.getSimbolo(this.expresion.valor).valor
+                return this;
+            }
+        }
         // Error de datos
         else{
             this.tipo = TipoDato.ERROR;

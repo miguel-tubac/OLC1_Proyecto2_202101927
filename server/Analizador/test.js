@@ -8,10 +8,11 @@ const {TipoDato} = require("../Interprete/Expresion.js");
 let entrada = `
 //std::string
 
-double c = 10.5;
-int a = 2;
-double val = c%a;
-couT << val;
+int edad = 2;
+int c = 23;
+int f = 12;
+bool dabdera = edad > 17 ? true:false;
+cout << dabdera;
 
 `;
 
