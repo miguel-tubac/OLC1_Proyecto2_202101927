@@ -108,6 +108,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
     const Aritmetica = require("../Interprete/exprecion/Aritmeticas.js");
     const Ternario = require("../Interprete/exprecion/Ternarios.js");
     const Negativo = require("../Interprete/exprecion/Negativo.js");
+    const Casteo = require("../Interprete/exprecion/Casteos.js");
 
     //Instruccion:
     const Print = require("../Interprete/instruccion/Print.js");
@@ -139,13 +140,14 @@ lista_instrucciones : lista_instrucciones instruccion        { $$ = $1; $$.push(
     | instruccion                   { $$ = []; $$.push($1); } //aqui se crea una lista de instrucciones y las cuales posteriormente se recorren
 ;
 
-instruccion : cuerpo        { $$ = $1 } 
+instruccion : funciones        { $$ = $1 } 
     | variables             { $$ = $1 }
+    | casteos               { $$ = $1 }
 	| error PYC 	        { var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
                             console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
-cuerpo : print              { $$ = $1 }
+funciones : print              { $$ = $1 }
 ;
 
 variables : INT rep_iden PUNTOYCOMA                                     { $$ = new Declarar($2, TipoDato.INT, "ERROR_1", @1.first_line, @1.first_column); }
@@ -169,7 +171,8 @@ print : COUT DOBLEMENOR expresion PUNTOYCOMA                    { $$ = new Print
     | COUT DOBLEMENOR expresion DOBLEMENOR ENDL PUNTOYCOMA      { $$ = new Print($3, TipoDato.ENDL, @1.first_line, @1.first_column); }
 ;
 
-casteos : INT ID IGUAL PARENTESIS_A INT PARENTESIS_C expresion PUNTOYCOMA       {  }
+casteos : INT rep_iden IGUAL PARENTESIS_A INT PARENTESIS_C expresion PUNTOYCOMA         { $$ = new Casteo($2, TipoDato.INT, $7, @1.first_line, @1.first_column); }
+    | ID IGUAL PARENTESIS_A INT PARENTESIS_C expresion PUNTOYCOMA                       {  }
 ;
 
 ternario : expresion INTEROGACION expresion DOSPUNTOS expresion     { $$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column); }

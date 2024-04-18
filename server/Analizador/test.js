@@ -6,14 +6,9 @@ const {TipoDato} = require("../Interprete/Expresion.js");
 
 
 let entrada = `
-//std::string
-
-int edad = 2;
-int c = 23;
-int f = 12;
-bool dabdera = edad > 17 ? true:false;
-cout << dabdera;
-
+int edad = (int) 18.0;
+//int edad = 2;
+cout << edad;
 `;
 
 var devuelve="";
