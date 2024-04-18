@@ -10,7 +10,8 @@ class Casteos extends Expresion{
     }
 
     interpretar(entorno){
-
+        this.expresion.interpretar(entorno);
+        
     }
 }
 

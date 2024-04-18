@@ -12,6 +12,13 @@ class Declarar extends Instruccion{
     }
 
     interpretar(entorno){
+        if (this.expresion === "RENOMBRAR" || this.expresion === "ERROR_1" || this.expresion === "ERROR_2" || this.expresion === "ERROR_3" || this.expresion === "ERROR_4" || this.expresion === "ERROR_5"){
+            //Aca se deja comentado
+        }else{
+            this.expresion.interpretar(entorno);
+        }
+            
+        //this.id.interpretar(entorno);
         // Delclaracion del tipo: int a,d,f;
         if (this.expresion === "ERROR_1" && this.tipo === TipoDato.INT){
             //Se recorre el areglo por si hay mas variables declaradas:
@@ -27,6 +34,7 @@ class Declarar extends Instruccion{
             const longitud = this.id.length;
             //Se recorre el areglo por si hay mas variables declaradas:
             this.id.forEach((element, index) => {
+                //console.log(element.valor);  
                 if (index === longitud - 1){
                     entorno.addSimbolo(element.interpretar(entorno).valor, Number(this.expresion.valor), this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
                 }else {
@@ -197,7 +205,7 @@ class Declarar extends Instruccion{
             }
         }
         else{
-            console.log("ERROR Semantico: en asignacion de tipo de dato con la variable");
+            console.log("ERROR Semantico: en asignacion de tipo de dato con la variable general");
             return this;
         }
         

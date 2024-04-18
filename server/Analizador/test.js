@@ -6,7 +6,13 @@ const {TipoDato} = require("../Interprete/Expresion.js");
 
 
 let entrada = `
-couT << "mig" + "uel";
+//std::string
+
+double c = 10.5;
+int a = 2;
+double val = c%a;
+couT << val;
+
 `;
 
 var devuelve="";
