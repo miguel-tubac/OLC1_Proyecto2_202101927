@@ -4,11 +4,13 @@ const {TipoDato} = require("../Interprete/Expresion.js");
 
 
 
-
 let entrada = `
-int edad = (int) 18.0;
-//int edad = 2;
-cout << edad;
+int as = 2;
+as ++;
+cout << as << endl;
+as --;
+as --;
+cout << as;
 `;
 
 var devuelve="";

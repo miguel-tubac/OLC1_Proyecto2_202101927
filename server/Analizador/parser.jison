@@ -109,6 +109,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
     const Ternario = require("../Interprete/exprecion/Ternarios.js");
     const Negativo = require("../Interprete/exprecion/Negativo.js");
     const Casteo = require("../Interprete/exprecion/Casteos.js");
+    const Incre_Decre = require("../Interprete/exprecion/Incre_Decre.js")
 
     //Instruccion:
     const Print = require("../Interprete/instruccion/Print.js");
@@ -147,7 +148,8 @@ instruccion : funciones        { $$ = $1 }
                             console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
-funciones : print              { $$ = $1 }
+funciones : print               { $$ = $1 }
+    | incre_decre               { $$ = $1 }
 ;
 
 variables : INT rep_iden PUNTOYCOMA                                     { $$ = new Declarar($2, TipoDato.INT, "ERROR_1", @1.first_line, @1.first_column); }
@@ -171,8 +173,18 @@ print : COUT DOBLEMENOR expresion PUNTOYCOMA                    { $$ = new Print
     | COUT DOBLEMENOR expresion DOBLEMENOR ENDL PUNTOYCOMA      { $$ = new Print($3, TipoDato.ENDL, @1.first_line, @1.first_column); }
 ;
 
-casteos : INT rep_iden IGUAL PARENTESIS_A INT PARENTESIS_C expresion PUNTOYCOMA         { $$ = new Casteo($2, TipoDato.INT, $7, @1.first_line, @1.first_column); }
-    | ID IGUAL PARENTESIS_A INT PARENTESIS_C expresion PUNTOYCOMA                       {  }
+casteos : INT rep_iden IGUAL PARENTESIS_A INT PARENTESIS_C expresion PUNTOYCOMA         { $$ = new Casteo($2, TipoDato.INT, $7, "SI", @1.first_line, @1.first_column); }
+    | ID IGUAL PARENTESIS_A INT PARENTESIS_C expresion PUNTOYCOMA                       { $$ = new Casteo($1, TipoDato.INT, $6, "NO", @1.first_line, @1.first_column); }
+    | DOUBLE rep_iden IGUAL PARENTESIS_A DOUBLE PARENTESIS_C expresion PUNTOYCOMA       { $$ = new Casteo($2, TipoDato.DOUBLE, $7, "SI", @1.first_line, @1.first_column); }
+    | ID IGUAL PARENTESIS_A DOUBLE PARENTESIS_C expresion PUNTOYCOMA                    { $$ = new Casteo($1, TipoDato.DOUBLE, $6, "NO", @1.first_line, @1.first_column); }
+    | STD DOBLEDOSPUNTOS STRING rep_iden IGUAL PARENTESIS_A STD DOBLEDOSPUNTOS STRING PARENTESIS_C expresion PUNTOYCOMA       { $$ = new Casteo($4, TipoDato.CADENA, $11, "SI", @1.first_line, @1.first_column); }
+    | ID IGUAL PARENTESIS_A STD DOBLEDOSPUNTOS STRING PARENTESIS_C expresion PUNTOYCOMA                                       { $$ = new Casteo($1, TipoDato.CADENA, $8, "NO", @1.first_line, @1.first_column); }
+    | CHAR rep_iden IGUAL PARENTESIS_A CHAR PARENTESIS_C expresion PUNTOYCOMA           { $$ = new Casteo($2, TipoDato.CHAR, $7, "SI", @1.first_line, @1.first_column); }
+    | ID IGUAL PARENTESIS_A CHAR PARENTESIS_C expresion PUNTOYCOMA                      { $$ = new Casteo($1, TipoDato.CHAR, $6, "NO", @1.first_line, @1.first_column); }
+;
+
+incre_decre : ID MAS MAS PUNTOYCOMA         { $$ = new Incre_Decre($1, "++", @1.first_line, @1.first_column); }
+    | ID MENOS MENOS PUNTOYCOMA             { $$ = new Incre_Decre($1, "--", @1.first_line, @1.first_column); }
 ;
 
 ternario : expresion INTEROGACION expresion DOSPUNTOS expresion     { $$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column); }
