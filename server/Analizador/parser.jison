@@ -27,6 +27,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 "endl"                      { return 'ENDL'; }
 "pow"                       { return 'POW'; }
 "std"                       { return 'STD'; }
+"new"                       { return 'NEW'; }
 
 //---------TIPOS DE DATOS------------------------------
 "true"                      { return 'TRUE'; }
@@ -67,6 +68,8 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 "/"                         { return 'DIVICION'; }
 "%"                         { return 'MODULO'; }
 "?"                         { return 'INTEROGACION'; }
+"["                         { return 'CORCHETE_A'; }
+"]"                         { return 'CORCHETE_C'; }
 
 //-------------INDENTIFICADORES-------------------------
 {numerodecimal}			     { return 'NUMERODECIMA'; }
@@ -114,6 +117,8 @@ id [a-zA-Z][a-zA-Z0-9_]*;
     //Instruccion:
     const Print = require("../Interprete/instruccion/Print.js");
     const Declarar = require("../Interprete/instruccion/Declarar.js");
+    const Vectores = require("../Interprete/instruccion/Vectores.js")
+    const AccesoVector = require("../Interprete/instruccion/AccesoVector.js");
 %}
 
 %left 'INTEROGACION' cast
@@ -150,6 +155,7 @@ instruccion : funciones        { $$ = $1 }
 
 funciones : print               { $$ = $1 }
     | incre_decre               { $$ = $1 }
+    | declarar_vector           { $$ = $1 }
 ;
 
 variables : INT rep_iden PUNTOYCOMA                                     { $$ = new Declarar($2, TipoDato.INT, "ERROR_1", @1.first_line, @1.first_column); }
@@ -187,6 +193,15 @@ incre_decre : ID MAS MAS PUNTOYCOMA         { $$ = new Incre_Decre($1, "++", @1.
     | ID MENOS MENOS PUNTOYCOMA             { $$ = new Incre_Decre($1, "--", @1.first_line, @1.first_column); }
 ;
 
+declarar_vector : INT rep_iden CORCHETE_A CORCHETE_C IGUAL NEW INT CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   { $$ = new Vectores($2, TipoDato.INT, $9, @1.first_line, @1.first_column); }
+    | INT rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL NEW INT CORCHETE_A lista_valores CORCHETE_C CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   {  }
+    | INT rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL NEW INT CORCHETE_A CORCHETE_A lista_valores CORCHETE_C CORCHETE_C CORCHETE_A CORCHETE_A  lista_valores CORCHETE_C CORCHETE_C PUNTOYCOMA   {  }
+;
+
+lista_valores : lista_valores COMA  expresion               {$1.push($3); $$ = $1;} 
+    | expresion                                             {$$ = [$1];}
+;
+
 ternario : expresion INTEROGACION expresion DOSPUNTOS expresion     { $$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column); }
 ;
 
@@ -214,4 +229,6 @@ expresion : ENTERO    	{ $$ = new Dato($1, TipoDato.INT, @1.first_line, @1.first
     | expresion OR expresion            { $$ = new Aritmetica($1 ,$2 ,$3, @1.first_line, @1.first_column); }
     | expresion AND expresion           { $$ = new Aritmetica($1 ,$2 ,$3, @1.first_line, @1.first_column); }
     | NOT expresion                     { $$ = new Aritmetica($2 ,$1 ,$2, @1.first_line, @1.first_column); }
+    | ID CORCHETE_A expresion CORCHETE_C                                    { $$ = new AccesoVector($1, $3, "null", @1.first_line, @1.first_column); }
+    | ID CORCHETE_A expresion CORCHETE_C CORCHETE_A expresion CORCHETE_C    { $$ = new AccesoVector($1, $3, $6, @1.first_line, @1.first_column); }
 ;

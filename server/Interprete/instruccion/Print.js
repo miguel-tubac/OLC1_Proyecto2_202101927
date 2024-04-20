@@ -19,12 +19,14 @@ class Print extends Instruccion{
                 return this;
             }
             else if(dato.tipo != TipoDato.ERROR){
+                //console.log(dato);
                 //console.log(dato.valor);
                 this.expresion.valor = dato.valor;
                 return this;
             }
             
-        }else{
+        }
+        else{
             //Todo recordar de comentar esto
             console.log("Error, no se puede imprimir errores");
             return this;

@@ -12,10 +12,17 @@ class Declarar extends Instruccion{
     }
 
     interpretar(entorno){
+        let comprovacion = false;
         if (this.expresion === "RENOMBRAR" || this.expresion === "ERROR_1" || this.expresion === "ERROR_2" || this.expresion === "ERROR_3" || this.expresion === "ERROR_4" || this.expresion === "ERROR_5"){
             //Aca se deja comentado
         }else{
             this.expresion.interpretar(entorno);
+        }
+        try {
+            this.expresion.interpretar(entorno)
+            comprovacion = true;
+        } catch (error) {
+            comprovacion = false;
         }
             
         //this.id.interpretar(entorno);
@@ -41,6 +48,33 @@ class Declarar extends Instruccion{
                     entorno.addSimbolo(element.interpretar(entorno).valor, 0, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
                 }
             });
+        }
+        //Todo paso "3" este es el caso en donde se asigna un vector: int nuevo2 = dato3[1]; 
+        else if (comprovacion && this.tipo === TipoDato.INT){
+            let vector = this.expresion.interpretar(entorno);
+            let valor_vector = entorno.getSimbolo(vector.id);
+            // Aca es cuando el valor es un vector
+            if(vector.expresion2 === "null"){
+                if(valor_vector.tipo == TipoDato.INT && vector.expresion.tipo == TipoDato.INT){
+                    //Se recorre el arreglo con datos
+                    for(let i = 0; i< valor_vector.valor.length; i++){
+                        // Se busca la posicion en donde se manda en la exprecion
+                        if(vector.expresion.valor == i){
+                            //Se agrega el valor
+                            this.id.forEach(element => {
+                                entorno.addSimbolo(element.interpretar(entorno).valor, Number(valor_vector.valor[i]), this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+                            });
+                            return this;
+                        }
+                    }
+                }
+            }
+            //Aca es cuando es una lista
+            else if(vector.expresion2 != "null"){
+                //aca el doble expresion
+            }
+            return this;
+            //----------Fin-----
         }
         else if(this.expresion === "ERROR_2" && this.tipo === TipoDato.CADENA){
             //Se recorre el areglo por si hay mas variables declaradas:
@@ -127,7 +161,7 @@ class Declarar extends Instruccion{
         }
         else if(this.expresion === "RENOMBRAR"){
             //console.log(entorno.getSimbolo(this.id));
-            // console.log(this.id);
+            //console.log(this.tipo.interpretar(entorno).id);
             // console.log(this.tipo.valor);
             if (this.tipo.tipo == TipoDato.INT && entorno.getSimbolo(this.id).tipo == TipoDato.INT){
                 //Se edita la variable:
@@ -157,9 +191,36 @@ class Declarar extends Instruccion{
                 entorno.editarSimbolo(this.id, Number(this.tipo.valor), this.fila, this.columna);
                 //console.log(entorno.getSimbolo(this.id));
             }
-            else{
-                console.log("ERROR Semantico: en asignacion de tipo de dato con la variable renombrado");
+            //Todo paso:"2" Esto fue lo que modifique despues de crear la clase AccesoVectores.js
+            // Aca se esta reasignando un vector a una variable
+            else if(this.tipo.interpretar(entorno) != undefined){
+                console.log("Hola");
+                let vector = this.tipo.interpretar(entorno);
+                let dato = entorno.getSimbolo(vector.id);
+                //int nuevo1; nuevo1 = dato3[1]; esto es lo unico que estoy evaluando
+                // Aca es cuando el valor es un vector
+                if(vector.expresion2 === "null"){
+                    if(entorno.getSimbolo(this.id).tipo == TipoDato.INT && dato.tipo == TipoDato.INT && vector.expresion.tipo == TipoDato.INT){
+                        //Se recorre el arreglo con datos
+                        for(let i = 0; i< dato.valor.length; i++){
+                            // Se busca la posicion en donde se manda en la exprecion
+                            if(vector.expresion.valor == i){
+                                //Se actualiza el valor
+                                entorno.editarSimbolo(this.id, Number(dato.valor[i]));
+                                return this;
+                            }
+                        }
+                    }
+                }
+                //Aca es cuando es una lista
+                else if(vector.expresion2 != "null"){
+                    //aca el doble expresion
+                }
                 return this;
+                //----------Fin------
+            }
+            else{
+                console.log("Error Hola");
             }
         }
         // Aca se le cambia el valor a una variable, es decir; int a=1; int b = a;
