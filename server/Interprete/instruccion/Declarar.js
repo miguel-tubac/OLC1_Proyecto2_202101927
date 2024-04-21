@@ -51,16 +51,32 @@ class Declarar extends Instruccion{
         }
         //Todo paso "3" este es el caso en donde se asigna un vector: int nuevo2 = dato3[1]; 
         else if (comprovacion && this.tipo === TipoDato.INT){
+            console.log("Hola 1");
             let vector = this.expresion.interpretar(entorno);
             let valor_vector = entorno.getSimbolo(vector.id);
             // Aca es cuando el valor es un vector
             if(vector.expresion2 === "null"){
+                //Aca se evalua un dato de tipo numero por parametro: vector.expresion.tipo == TipoDato.INT
                 if(valor_vector.tipo == TipoDato.INT && vector.expresion.tipo == TipoDato.INT){
                     //Se recorre el arreglo con datos
                     for(let i = 0; i< valor_vector.valor.length; i++){
                         // Se busca la posicion en donde se manda en la exprecion
                         if(vector.expresion.valor == i){
                             //Se agrega el valor
+                            this.id.forEach(element => {
+                                entorno.addSimbolo(element.interpretar(entorno).valor, Number(valor_vector.valor[i]), this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+                            });
+                            return this;
+                        }
+                    }
+                }
+                //Aca se evalua un dato de tipo id por parametro: vector.expresion.tipo == TipoDato.ID
+                else if(valor_vector.tipo == TipoDato.INT && vector.expresion.tipo == TipoDato.ID){
+                    //Se recorre el arreglo con datos
+                    for(let i = 0; i< valor_vector.valor.length; i++){
+                        // Se busca la posicion en donde se manda en la exprecion
+                        if(entorno.getSimbolo(vector.expresion.valor).valor == i){
+                            //Se agrega el valor, y se recorre porque es un arreglo []
                             this.id.forEach(element => {
                                 entorno.addSimbolo(element.interpretar(entorno).valor, Number(valor_vector.valor[i]), this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
                             });
@@ -194,17 +210,30 @@ class Declarar extends Instruccion{
             //Todo paso:"2" Esto fue lo que modifique despues de crear la clase AccesoVectores.js
             // Aca se esta reasignando un vector a una variable
             else if(this.tipo.interpretar(entorno) != undefined){
-                console.log("Hola");
+                console.log("Hola 23");
                 let vector = this.tipo.interpretar(entorno);
                 let dato = entorno.getSimbolo(vector.id);
                 //int nuevo1; nuevo1 = dato3[1]; esto es lo unico que estoy evaluando
                 // Aca es cuando el valor es un vector
                 if(vector.expresion2 === "null"){
+                    //Aca se asocia un entero vector.expresion.tipo == TipoDato.INT
                     if(entorno.getSimbolo(this.id).tipo == TipoDato.INT && dato.tipo == TipoDato.INT && vector.expresion.tipo == TipoDato.INT){
                         //Se recorre el arreglo con datos
                         for(let i = 0; i< dato.valor.length; i++){
                             // Se busca la posicion en donde se manda en la exprecion
                             if(vector.expresion.valor == i){
+                                //Se actualiza el valor
+                                entorno.editarSimbolo(this.id, Number(dato.valor[i]));
+                                return this;
+                            }
+                        }
+                    }
+                    // Aca se asocia una variable vector.expresion.tipo == TipoDato.ID
+                    else if(entorno.getSimbolo(this.id).tipo == TipoDato.INT && dato.tipo == TipoDato.INT && vector.expresion.tipo == TipoDato.ID){
+                        //Se recorre el arreglo con datos
+                        for(let i = 0; i< dato.valor.length; i++){
+                            // Se busca la posicion en donde se manda en la exprecion
+                            if(entorno.getSimbolo(vector.expresion.valor).valor == i){
                                 //Se actualiza el valor
                                 entorno.editarSimbolo(this.id, Number(dato.valor[i]));
                                 return this;

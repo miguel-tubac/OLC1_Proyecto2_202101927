@@ -9,25 +9,34 @@ let entrada = `
 //int b = 2;  //ya
 //int dato [] = new int [3];  //ya
 //int dato2 [] = new int [b];  //ya
-int dato3 [] = new int [2,3,4];  //ya
+//int dato3 [] = new int [2,3,4];  //ya
 //int dato4 [] = new int [b,5,b];  //ya
 
-int nuevo1;  //ya
-nuevo1 = dato3[2];  //ya
-int nuevo2 = dato3[5];  //ya
+//int nuevo1;  //ya
+//nuevo1 = dato3[2];  //ya
+//int nuevo2 = dato3[5];  //ya
 //cout << nuevo1 << endl;  //ya
 //cout << nuevo2; //ya
 
-int nuevo3;
-int a = 1;
-nuevo3 = dato3[a];
-//int nuevo4 = dato3[a]; //Retonra: 3 
-cout << nuevo3;
+//int nuevo3; // ya
+//int a = 2; // ya 
+//nuevo3 = dato3[a]; // ya
+//int nuevo4 = dato3[a]; //ya
+//cout << nuevo3; // ya
+//cout << nuevo4; //ya
 
 //cout << dato << endl; //ya
 //cout << dato2 << endl; //ya
 //cout << dato3 << endl; //ya
 //cout << dato4 << endl; //ya
+
+// Reasignacion
+int a = 2; // ya 
+int dato3 [] = new int [2,3,4]; //ya
+dato3 [0] = a;
+//dato3 [1] = dato3[1]; 
+//dato3 [a] = dato3[a]; 
+cout << dato3; //ya
 
 
 // Segunda forma de vectores

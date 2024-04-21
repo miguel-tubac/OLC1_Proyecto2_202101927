@@ -12,6 +12,7 @@ class Vectores extends Instruccion{
     }
 
     interpretar(entorno){
+        //console.log(this.expresion.length);
         //Aca se evalua la Declaracion de Tipo 1
         if(this.expresion.length == 1){
             let exprecion_valor = 0;//aca se guardara el valor de la exprecion

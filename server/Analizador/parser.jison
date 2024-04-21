@@ -119,6 +119,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
     const Declarar = require("../Interprete/instruccion/Declarar.js");
     const Vectores = require("../Interprete/instruccion/Vectores.js")
     const AccesoVector = require("../Interprete/instruccion/AccesoVector.js");
+    const ReasignarVector = require("../Interprete/instruccion/ReasignarVector.js");
 %}
 
 %left 'INTEROGACION' cast
@@ -196,7 +197,9 @@ incre_decre : ID MAS MAS PUNTOYCOMA         { $$ = new Incre_Decre($1, "++", @1.
 declarar_vector : INT rep_iden CORCHETE_A CORCHETE_C IGUAL NEW INT CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   { $$ = new Vectores($2, TipoDato.INT, $9, @1.first_line, @1.first_column); }
     | INT rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL NEW INT CORCHETE_A lista_valores CORCHETE_C CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   {  }
     | INT rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL NEW INT CORCHETE_A CORCHETE_A lista_valores CORCHETE_C CORCHETE_C CORCHETE_A CORCHETE_A  lista_valores CORCHETE_C CORCHETE_C PUNTOYCOMA   {  }
+    | ID CORCHETE_A expresion CORCHETE_C IGUAL expresion PUNTOYCOMA     { $$ = new ReasignarVector($1, $3, $6, @1.first_line, @1.first_column); }
 ;
+
 
 lista_valores : lista_valores COMA  expresion               {$1.push($3); $$ = $1;} 
     | expresion                                             {$$ = [$1];}
