@@ -13,7 +13,8 @@ class Simbolo{
 const TipoSimbolo = {
     ARREGLO: 'ARREGLO',
     VARIABLE: 'VARIABLE',
-    FUNCTION: 'FUNCTION'
+    FUNCTION: 'FUNCTION',
+    METODO: 'METODO'
 }
 
 module.exports = {Simbolo, TipoSimbolo};

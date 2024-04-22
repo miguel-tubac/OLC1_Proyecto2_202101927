@@ -5,46 +5,13 @@ const {TipoDato} = require("../Interprete/Expresion.js");
 
 
 let entrada = `
-// Primera forma de vectores
-//int b = 2;  //ya
-//int dato [] = new int [3];  //ya
-//int dato2 [] = new int [b];  //ya
-//int dato3 [] = new int [2,3,4];  //ya
-//int dato4 [] = new int [b,5,b];  //ya
 
-//int nuevo1;  //ya
-//nuevo1 = dato3[2];  //ya
-//int nuevo2 = dato3[5];  //ya
-//cout << nuevo1 << endl;  //ya
-//cout << nuevo2; //ya
+void hola_mundo(){
+    cout << 5/0;
+}
 
-//int nuevo3; // ya
-//int a = 2; // ya 
-//nuevo3 = dato3[a]; // ya
-//int nuevo4 = dato3[a]; //ya
-//cout << nuevo3; // ya
-//cout << nuevo4; //ya
+hola_mundo();
 
-//cout << dato << endl; //ya
-//cout << dato2 << endl; //ya
-//cout << dato3 << endl; //ya
-//cout << dato4 << endl; //ya
-
-// Reasignacion
-int a = 2; // ya 
-int dato3 [] = new int [2,3,4]; //ya
-dato3 [0] = a;
-//dato3 [1] = dato3[1]; 
-//dato3 [a] = dato3[a]; 
-cout << dato3; //ya
-
-
-// Segunda forma de vectores
-/*
-int a = 3;
-int c = 2;
-int dato [][] = new int [a][c];
-*/
 
 `;
 
@@ -54,10 +21,20 @@ let resultado = Analizar.parse(entrada);
 let entonoGlobal = new Entorno("GLOBAL", null);
 //console.log(resultado);
 
+//Esta es la primera pasada para guardar la informacion del metodo
+// resultado.forEach(element =>{
+//     //let metod = element.interpretar(entonoGlobal);
+//     if (element.tipo == 'METODO'){
+//         element.interpretar(entonoGlobal);
+//     }
+// });
+
+
+// Esta es la segunda pasada:
 let parcial;
 resultado.forEach(element => {
     parcial = element.interpretar(entonoGlobal);
-    //console.log(parcial);
+    console.log(parcial);
     if (parcial.tipo === "PRINT"){
         if (parcial.endl == TipoDato.ENDL){
             //Aca se evalua para que pueda imprimir un areglo
@@ -67,7 +44,11 @@ resultado.forEach(element => {
             else{
                 devuelve += parcial.expresion.valor + "\n";
             }
-        }else{
+        }
+        else if(Array.isArray(parcial.expresion.valor)){
+            devuelve += JSON.stringify(parcial.expresion.valor)
+        }
+        else{
             devuelve += parcial.expresion.valor;
         }
     }

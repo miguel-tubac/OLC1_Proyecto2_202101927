@@ -28,6 +28,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 "pow"                       { return 'POW'; }
 "std"                       { return 'STD'; }
 "new"                       { return 'NEW'; }
+"void"                      { return 'VOID'; }
 
 //---------TIPOS DE DATOS------------------------------
 "true"                      { return 'TRUE'; }
@@ -70,6 +71,8 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 "?"                         { return 'INTEROGACION'; }
 "["                         { return 'CORCHETE_A'; }
 "]"                         { return 'CORCHETE_C'; }
+"{"                         { return 'LLAVE_A'; }
+"}"                         { return 'LLAVE_C'; }
 
 //-------------INDENTIFICADORES-------------------------
 {numerodecimal}			     { return 'NUMERODECIMA'; }
@@ -113,6 +116,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
     const Negativo = require("../Interprete/exprecion/Negativo.js");
     const Casteo = require("../Interprete/exprecion/Casteos.js");
     const Incre_Decre = require("../Interprete/exprecion/Incre_Decre.js")
+    const LlamadaMetodo = require ("../Interprete/exprecion/LlamadaMetodo.js");
 
     //Instruccion:
     const Print = require("../Interprete/instruccion/Print.js");
@@ -120,6 +124,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
     const Vectores = require("../Interprete/instruccion/Vectores.js")
     const AccesoVector = require("../Interprete/instruccion/AccesoVector.js");
     const ReasignarVector = require("../Interprete/instruccion/ReasignarVector.js");
+    const MetodSinParame = require("../Interprete/instruccion/MetodSinParame.js")
 %}
 
 %left 'INTEROGACION' cast
@@ -147,16 +152,21 @@ lista_instrucciones : lista_instrucciones instruccion        { $$ = $1; $$.push(
     | instruccion                   { $$ = []; $$.push($1); } //aqui se crea una lista de instrucciones y las cuales posteriormente se recorren
 ;
 
-instruccion : funciones        { $$ = $1 } 
+instruccion :  delcarar_metodo       { $$ = $1 }
     | variables             { $$ = $1 }
     | casteos               { $$ = $1 }
+    | llamada_metodo            { $$ = $1 }
 	| error PYC 	        { var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
                             console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
-funciones : print               { $$ = $1 }
+cuerpo : print                  { $$ = $1 }
     | incre_decre               { $$ = $1 }
     | declarar_vector           { $$ = $1 }
+    | variables                 { $$ = $1 }
+    | casteos                   { $$ = $1 }
+    | error LLAVE_C 	        { var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
+                            console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
 variables : INT rep_iden PUNTOYCOMA                                     { $$ = new Declarar($2, TipoDato.INT, "ERROR_1", @1.first_line, @1.first_column); }
@@ -203,6 +213,20 @@ declarar_vector : INT rep_iden CORCHETE_A CORCHETE_C IGUAL NEW INT CORCHETE_A li
 
 lista_valores : lista_valores COMA  expresion               {$1.push($3); $$ = $1;} 
     | expresion                                             {$$ = [$1];}
+;
+
+delcarar_metodo : VOID ID PARENTESIS_A PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   { $$ = new MetodSinParame($2, $6, @1.first_line, @1.first_column); }
+    | VOID ID PARENTESIS_A parametros PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   {  }
+;
+
+parametros : parametros COMA expresion ID     {$1.push($2); $1.push($3); $$ = $1;} 
+    | expresion  ID                      {$$ = [$1, $2];}
+;
+
+instrucciones_metodo : cuerpo      { $$ = $1 }
+;
+
+llamada_metodo :  ID  PARENTESIS_A PARENTESIS_C PUNTOYCOMA  { $$ = new LlamadaMetodo($1, @1.first_line, @1.first_column); }
 ;
 
 ternario : expresion INTEROGACION expresion DOSPUNTOS expresion     { $$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column); }

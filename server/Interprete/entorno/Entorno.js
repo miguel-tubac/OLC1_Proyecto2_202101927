@@ -1,5 +1,6 @@
 const {Simbolo} = require("./Simbolo");
 const {Expresion, TipoDato} = require("../Expresion");
+const { TipoInst } = require("../Instruccion");
 
 class Entorno{
 
@@ -10,6 +11,7 @@ class Entorno{
         this.tablaFunc = {};
     }
 
+    // ------------Incio de los simbolos
     addSimbolo(nombre, valor, tipo, tipoVar, fila, columna){
         if(nombre in this.tablaSim){
             console.log("Semantico: Variable ya declarada");
@@ -44,6 +46,45 @@ class Entorno{
             return;
         }
     }
+    //---------------Fin de los simbolos
+
+    // ------------Incio de las funciones y metodos
+    addFuncion(nombre, instrucciones, tipo, fila, columna){
+        if(nombre in this.tablaFunc){
+            console.log("Semantico: Funcion o metodo ya declarada");
+            return;
+        }
+
+        this.tablaFunc[nombre] = new Simbolo(nombre, instrucciones,  tipo, fila, columna)
+    }
+
+    getFuncion(nombre){
+        let ent = this;
+        while(ent != null){
+            if(!(nombre in ent.tablaFunc)){
+                ent = ent.anterior
+            }else{
+                return ent.tablaFunc[nombre];
+            }
+        }
+        //console.log("Semantico: variable no existe");
+        return new Expresion("ERROR", TipoDato.ERROR, 0, 0);
+        //Aca retornar un error
+    }
+
+    
+    //---------------Fin de las funciones y metodos
+
+    // esCiclo(){
+    //     let ent = this;
+    //     while(ent != null){
+    //         if(ent.nombre == TipoInst.WHILE){//ACA EVALUAR LAS OTRAS FOR, IF SWITCH
+    //             return true;
+    //         }
+    //         ent = ent.anterior;
+    //     }
+    //     return false;
+    // }
 }
 
 module.exports = Entorno;

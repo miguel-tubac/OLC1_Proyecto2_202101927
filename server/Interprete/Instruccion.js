@@ -18,6 +18,7 @@ const TipoInst = {
     IF: 'IF',
     DECLARAR: 'DECLARAR',
     INICIO: 'INICIO',
+    METODO: 'METODO'
 }
 
 module.exports = {Instruccion, TipoInst};
