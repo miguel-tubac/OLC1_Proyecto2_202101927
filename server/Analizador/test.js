@@ -1,17 +1,18 @@
 const Analizar = require("./parser.js");
 const Entorno = require("../Interprete/entorno/Entorno.js")
 const {TipoDato} = require("../Interprete/Expresion.js");
+const Print = require("../Interprete/instruccion/Print.js");
 
 
 
 let entrada = `
-
-void hola_mundo(){
-    cout << 5/0;
+int c;
+void hola_mundo(int a){
+    cout << c << endl;
+    cout << a;
 }
 
-hola_mundo();
-
+execute hola_mundo(2);
 
 `;
 
@@ -21,37 +22,58 @@ let resultado = Analizar.parse(entrada);
 let entonoGlobal = new Entorno("GLOBAL", null);
 //console.log(resultado);
 
-//Esta es la primera pasada para guardar la informacion del metodo
-// resultado.forEach(element =>{
-//     //let metod = element.interpretar(entonoGlobal);
-//     if (element.tipo == 'METODO'){
-//         element.interpretar(entonoGlobal);
+//let reult = [EXECUTE, FUNCION, ASIGNACION, ASIGNACION, FUNCION]
+//console.log(resultado.length);
+for (let i =0; i< resultado.length; i ++){
+    //console.log(resultado[i]);
+	//Aca afura se interpreta todo lo que no se execute
+	if(resultado[i].tipo != "EXECUTE"){
+        resultado[i].interpretar(entonoGlobal);
+		//console.log("Interpretando1: " + resultado[i]);
+        //console.log(resultado[i]);
+	}
+}
+
+let executeIniciado = false;
+for (let i =0; i< resultado.length; i ++){
+    //resultado[i].interpretar(entonoGlobal);
+	//Aca afura se interpreta todo lo que no se execute
+	if(resultado[i].tipo =="EXECUTE" && !executeIniciado){
+        resultado[i].interpretar(entonoGlobal);
+		executeIniciado = true;
+		//console.log("Interpretando2: " + resultado[i]);
+	}
+	//Aca es cuando salga otro execute
+	else if (resultado[i].tipo == "EXECUTE" && executeIniciado){
+		console.log("Error semnatico solo puede aver un execute"); 
+	}
+}
+
+console.log(Print.obtenerValorTexto());
+
+
+// // Esta es la pasada para obtener los datos de imprecion:
+// let parcial;
+// resultado.forEach(element => {
+//     parcial = element;
+//     //console.log(parcial);
+//     if (parcial.tipo === "PRINT"){
+//         if (parcial.endl == TipoDato.ENDL){
+//             //Aca se evalua para que pueda imprimir un areglo
+//             if (Array.isArray(parcial.expresion.valor)){
+//                 devuelve += JSON.stringify(parcial.expresion.valor)+ "\n";
+//             }
+//             else{
+//                 devuelve += parcial.expresion.valor + "\n";
+//             }
+//         }
+//         else if(Array.isArray(parcial.expresion.valor)){
+//             devuelve += JSON.stringify(parcial.expresion.valor)
+//         }
+//         else{
+//             devuelve += parcial.expresion.valor;
+//         }
 //     }
 // });
 
-
-// Esta es la segunda pasada:
-let parcial;
-resultado.forEach(element => {
-    parcial = element.interpretar(entonoGlobal);
-    console.log(parcial);
-    if (parcial.tipo === "PRINT"){
-        if (parcial.endl == TipoDato.ENDL){
-            //Aca se evalua para que pueda imprimir un areglo
-            if (Array.isArray(parcial.expresion.valor)){
-                devuelve += JSON.stringify(parcial.expresion.valor)+ "\n";
-            }
-            else{
-                devuelve += parcial.expresion.valor + "\n";
-            }
-        }
-        else if(Array.isArray(parcial.expresion.valor)){
-            devuelve += JSON.stringify(parcial.expresion.valor)
-        }
-        else{
-            devuelve += parcial.expresion.valor;
-        }
-    }
-});
-
-console.log(devuelve);
+// console.log(devuelve);

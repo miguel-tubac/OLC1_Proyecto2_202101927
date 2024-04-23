@@ -3,7 +3,7 @@ const {Instruccion, TipoInst} = require("../Instruccion");
 //const {TipoSimbolo} = require("../entorno/Simbolo");
 
 class Print extends Instruccion{
-
+    static valorTexto = ""; // Variable de texto asociada a la clase
     constructor(expresion, endl, fila, columna){
         super(TipoInst.PRINT, fila, columna);
         this.expresion = expresion;
@@ -11,27 +11,42 @@ class Print extends Instruccion{
     }
 
     interpretar(entorno){
-        //console.log(entorno.getSimbolo(this.expresion.valor));
-        this.expresion.interpretar(entorno);
+        let valor = this.expresion.interpretar(entorno);
         if (this.expresion.tipo != TipoDato.ERROR){
-            let dato = entorno.getSimbolo(this.expresion.valor);
-            if (dato.tipo == TipoDato.ERROR){
-                return this;
+            //console.log(this.expresion.tipo);
+            if (this.expresion.tipo == TipoDato.ID){
+                if (this.endl == null){
+                    let dato = entorno.getSimbolo(this.expresion.valor);
+                    Print.valorTexto += dato.valor.toString();
+                    return;
+                }
+                else{
+                    let dato = entorno.getSimbolo(this.expresion.valor);
+                    Print.valorTexto += dato.valor.toString() + "\n";
+                    return;
+                }
             }
-            else if(dato.tipo != TipoDato.ERROR){
-                //console.log(dato);
-                //console.log(dato.valor);
-                this.expresion.valor = dato.valor;
-                return this;
+            else{
+                if (this.endl == null){
+                    Print.valorTexto += valor.valor.toString();
+                    return;
+                }
+                else{
+                    Print.valorTexto += valor.valor.toString() + "\n";
+                    return;
+                }   
             }
-            
         }
         else{
             //Todo recordar de comentar esto
             console.log("Error, no se puede imprimir errores");
             return this;
         }
-       // return this;
+
+    }
+
+    static obtenerValorTexto() {
+        return Print.valorTexto; // Método estático para obtener el valor de texto
     }
 }
 

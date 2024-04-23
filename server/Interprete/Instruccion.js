@@ -16,9 +16,14 @@ class Instruccion{
 const TipoInst = {
     PRINT: 'PRINT',
     IF: 'IF',
+    WHILE: 'WHILE',
     DECLARAR: 'DECLARAR',
     INICIO: 'INICIO',
-    METODO: 'METODO'
+    METODO: 'METODO',
+    BREAK: 'BREAK',
+    RETURN: 'RETURN',
+    FUNCION: 'FUNCION',
+    EXECUTE: 'EXECUTE'
 }
 
 module.exports = {Instruccion, TipoInst};

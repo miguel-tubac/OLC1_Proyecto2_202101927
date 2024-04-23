@@ -19,7 +19,8 @@ const TipoDato = {
     ID: 'ID',
     CADENA: 'CADENA',
     ENDL: 'ENDL',
-    ERROR: 'ERROR'
+    ERROR: 'ERROR',
+    VOID: 'VOID'
 }
 
 module.exports = {Expresion, TipoDato};

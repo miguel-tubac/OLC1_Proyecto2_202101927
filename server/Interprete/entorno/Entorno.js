@@ -49,13 +49,12 @@ class Entorno{
     //---------------Fin de los simbolos
 
     // ------------Incio de las funciones y metodos
-    addFuncion(nombre, instrucciones, tipo, fila, columna){
+    addFuncion(nombre, instrucciones, fila, columna){
         if(nombre in this.tablaFunc){
             console.log("Semantico: Funcion o metodo ya declarada");
             return;
         }
-
-        this.tablaFunc[nombre] = new Simbolo(nombre, instrucciones,  tipo, fila, columna)
+        this.tablaFunc[nombre] =  instrucciones;    //new Simbolo(nombre, instrucciones,  tipo, fila, columna)
     }
 
     getFuncion(nombre){

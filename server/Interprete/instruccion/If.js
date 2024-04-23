@@ -21,9 +21,19 @@ class If extends Instruccion{
 
         //Cunado tengamos una condicion verdadera:
         if(String(this.condicion.valor).toLowerCase() === "true"){
-            this.instr_if.forEach(element => {
-                element.interpretar(entornoIf);
-            }); 
+            for (let i = 0; i < this.instr_if.length; i ++){
+                let instruccion = this.instr_if[i]
+                instruccion.interpretar(entornoIf);
+                if(instruccion.tipo = TipoInst.BREAK){
+                    this.tipo = TipoInst.BREAK
+                    break;
+                }
+                else if (instruccion.tipo = TipoInst.RETURN){
+                    this.tipo = TipoInst.RETURN;
+                    break;
+                }
+                
+            }
         }
         else{
             //Aca la ejcucion del else if o el else
