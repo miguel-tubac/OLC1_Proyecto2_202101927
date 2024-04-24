@@ -39,7 +39,7 @@ class Print extends Instruccion{
         }
         else{
             //Todo recordar de comentar esto
-            console.log("Error, no se puede imprimir errores");
+            console.log("Error, no se puede imprimir errores, quiter luego");
             return this;
         }
 

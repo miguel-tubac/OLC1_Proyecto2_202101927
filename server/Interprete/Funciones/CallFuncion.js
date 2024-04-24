@@ -1,5 +1,6 @@
 const {Expresion, TipoDato} = require("../Expresion");
 const Entorno = require("../entorno/Entorno");
+const {TipoSimbolo} = require("../entorno/Simbolo.js");
 const {Instruccion, TipoInst} = require("../Instruccion");
 const Dato = require("../exprecion/Dato.js");
 
@@ -17,19 +18,38 @@ class CallFuncion extends Expresion{
         let entornoFuncion = new Entorno(TipoInst.FUNCION, entornoParametros);
         let funcion = entorno.getFuncion(this.nombre);
 
-        
-        // console.log(this.parametros);
-        // console.log(funcion.parametros);
-        //Paso 1: Actualizar los parametros
-        //console.log(this.parametros.length);
-        for (let i = 0; i < this.parametros.length; i++){
-            funcion.parametros[i].valor = this.parametros[i].interpretar(entornoFuncion).valor;
-            //Aca se almacena en la tabla de simbolos
-            //console.log(funcion.parametros[i].valor);
-            //console.log( this.parametros[i].interpretar(entornoFuncion).valor);
-            funcion.parametros[i].interpretar(entornoParametros);
+        // Aca se comprueba que no se le pasaron parametros
+        if(this.parametros != null){
+            //Paso 1: Actualizar los parametros
+            for (let i = 0; i < this.parametros.length; i++){
+                if (funcion.parametros[i].tipo == this.parametros[i].interpretar(entornoFuncion).tipo){
+                    entornoParametros.addSimbolo(funcion.parametros[i].valor, this.parametros[i].interpretar(entornoFuncion).valor, funcion.parametros[i].tipo, TipoSimbolo.VARIABLE, this.fila, this.columna)
+                    funcion.parametros[i].valor = this.parametros[i].interpretar(entornoFuncion).valor;
+                    //Aca se almacena en la tabla de simbolos
+                    funcion.parametros[i].interpretar(entornoParametros);
+                }
+                else if(this.parametros[i].interpretar(entornoFuncion).tipo == TipoDato.ID){
+                    let variable = entorno.getSimbolo(this.parametros[i].interpretar(entornoFuncion).valor);
+                    if(variable.tipo == funcion.parametros[i].tipo){
+                        entornoParametros.addSimbolo(funcion.parametros[i].valor, variable.valor, funcion.parametros[i].tipo, TipoSimbolo.VARIABLE, this.fila, this.columna)
+                        funcion.parametros[i].valor = this.parametros[i].interpretar(entornoFuncion).valor;
+                        //Aca se almacena en la tabla de simbolos
+                        funcion.parametros[i].interpretar(entornoParametros);
+                    }
+                    else {
+                        console.log("Error semantico en los tipos de datos ingresados por parametros.");
+                        this.tipo = TipoDato.ERROR;
+                        return this;
+                    }
+                }
+                else {
+                    console.log("Error semantico en los tipos de datos ingresados por parametros.");
+                    this.tipo = TipoDato.ERROR;
+                    return this;
+                }
+            }
         }
-        //console.log(funcion);
+        
         //Aca se van ejecutando las instrucciones
         for (let i = 0; i < funcion.instrucciones.length; i++){
             let instruccion = funcion.instrucciones[i];

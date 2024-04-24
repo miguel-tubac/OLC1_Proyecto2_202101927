@@ -6,13 +6,19 @@ const Print = require("../Interprete/instruccion/Print.js");
 
 
 let entrada = `
-int c;
-void hola_mundo(int a){
-    cout << c << endl;
-    cout << a;
+
+void hola_mundo(bool c){
+	int der = 23;
+	int ser = 2;
+    cout << der + ser << endl;
+	cout << hola() << endl;
 }
 
-execute hola_mundo(2);
+void hola( ){
+    cout << "5555" << endl;
+}
+
+execute hola_mundo();
 
 `;
 

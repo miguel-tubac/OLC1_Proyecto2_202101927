@@ -30,6 +30,9 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 "new"                       { return 'NEW'; }
 "void"                      { return 'VOID'; }
 "execute"                   { return 'EXECUTE'; }
+"break"                     { return 'BREAK'; }
+"continue"                  { return 'CONTINUE'; }
+"return"                    { return 'RETURN'; }
 
 //---------TIPOS DE DATOS------------------------------
 "true"                      { return 'TRUE'; }
@@ -127,6 +130,8 @@ id [a-zA-Z][a-zA-Z0-9_]*;
     const ReasignarVector = require("../Interprete/instruccion/ReasignarVector.js");
     const Execute = require("../Interprete/Funciones/Execute.js");
     const DecFuncion = require("../Interprete/Funciones/DecFuncion.js");
+    const Return = require("../Interprete/instruccion/Break.js");
+    const Break = require("../Interprete/instruccion/Break.js");
 %}
 
 %left 'INTEROGACION' cast
@@ -172,6 +177,9 @@ cuerpo : print                  { $$ = $1 }
     | declarar_vector           { $$ = $1 }
     | variables                 { $$ = $1 }
     | casteos                   { $$ = $1 }
+    | sentencias_contro         { $$ = $1 }
+    | error PYC 	        { var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
+                            console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
     | error LLAVE_C 	        { var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
                             console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
@@ -224,6 +232,16 @@ lista_valores : lista_valores COMA  expresion               {$1.push($3); $$ = $
 
 delcarar_metodo : VOID ID PARENTESIS_A PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   { $$ = new DecFuncion($2, null, null, $6, @1.first_line, @1.first_column); }
     | VOID ID PARENTESIS_A parametros PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   { $$ = new DecFuncion($2, null, $4, $7, @1.first_line, @1.first_column); }
+    | INT ID PARENTESIS_A parametros PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   { $$ = new DecFuncion($2, TipoDato.INT, $4, $7, @1.first_line, @1.first_column); }
+    | INT ID PARENTESIS_A PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   { $$ = new DecFuncion($2, TipoDato.INT, null, $6, @1.first_line, @1.first_column); }
+    | DOUBLE ID PARENTESIS_A parametros PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   { $$ = new DecFuncion($2, TipoDato.DOUBLE, $4, $7, @1.first_line, @1.first_column); }
+    | DOUBLE ID PARENTESIS_A PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   { $$ = new DecFuncion($2, TipoDato.DOUBLE, null, $6, @1.first_line, @1.first_column); }
+    | CHAR ID PARENTESIS_A parametros PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   { $$ = new DecFuncion($2, TipoDato.CHAR, $4, $7, @1.first_line, @1.first_column); }
+    | CHAR ID PARENTESIS_A PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   { $$ = new DecFuncion($2, TipoDato.CHAR, null, $6, @1.first_line, @1.first_column); }
+    | STD DOBLEDOSPUNTOS STRING ID PARENTESIS_A parametros PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   { $$ = new DecFuncion($4, TipoDato.CADENA, $6, $9, @1.first_line, @1.first_column); }
+    | STD DOBLEDOSPUNTOS STRING ID PARENTESIS_A PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   { $$ = new DecFuncion($4, TipoDato.CADENA, null, $8, @1.first_line, @1.first_column); }
+    | BOOL ID PARENTESIS_A parametros PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   { $$ = new DecFuncion($2, TipoDato.BOOLEAN, $4, $7, @1.first_line, @1.first_column); }
+    | BOOL ID PARENTESIS_A PARENTESIS_C LLAVE_A instrucciones_metodo LLAVE_C   { $$ = new DecFuncion($2, TipoDato.BOOLEAN, null, $6, @1.first_line, @1.first_column); }
 ;
 
 parametros : parametros COMA tipo ID    { $$ = $1 ; $$.push(new Dato($4, $3, @1.first_line, @1.first_column)); }
@@ -244,6 +262,12 @@ instrucciones_metodo : instrucciones_metodo  cuerpo      {$1.push($2); $$ = $1;}
 
 llamada_metodo :  ID  PARENTESIS_A PARENTESIS_C   { $$ = new CallFuncion($1, null, @1.first_line, @1.first_column); }
     | ID  PARENTESIS_A lista_valores PARENTESIS_C   { $$ = new CallFuncion($1, $3, @1.first_line, @1.first_column); }
+;
+
+sentencias_contro : BREAK PUNTOYCOMA        { $$ = new Break(@1.first_line, @1.first_column);}
+    | RETURN expresion PUNTOYCOMA           { $$ = new Return($2, @1.first_line, @1.first_column); }
+    | RETURN PUNTOYCOMA                     { $$ = new Return(null, @1.first_line, @1.first_column); }
+    | CONTINUE PUNTOYCOMA                   { }
 ;
 
 ternario : expresion INTEROGACION expresion DOSPUNTOS expresion     { $$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column); }
