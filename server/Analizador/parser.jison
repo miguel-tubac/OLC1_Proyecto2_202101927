@@ -101,8 +101,7 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 //-----------> FIN DE CADENA Y ERRORES------------------
 <<EOF>>               return 'EOF';
 .  { var nuevo_error = new Error("Error Léxico","Caracter Incorrecto: "+yytext, yylloc.first_line, yylloc.first_column); listaDeErrores.push(nuevo_error); 
-    console.error('Error léxico: \"' + yytext + '\", linea: ' + yylloc.first_line + ', columna: ' + yylloc.first_column);
-    return 'INVALIDO' }
+    console.error('Error léxico: \"' + yytext + '\", linea: ' + yylloc.first_line + ', columna: ' + yylloc.first_column);}
 
 // console.error('Error léxico: \"' + yytext + '\", linea: ' + yylloc.first_line + ', columna: ' + yylloc.first_column);
 
@@ -130,8 +129,9 @@ id [a-zA-Z][a-zA-Z0-9_]*;
     const ReasignarVector = require("../Interprete/instruccion/ReasignarVector.js");
     const Execute = require("../Interprete/Funciones/Execute.js");
     const DecFuncion = require("../Interprete/Funciones/DecFuncion.js");
-    const Return = require("../Interprete/instruccion/Break.js");
+    const Return = require("../Interprete/instruccion/Return.js");
     const Break = require("../Interprete/instruccion/Break.js");
+    const Continue = require("../Interprete/instruccion/Continue.js");
 %}
 
 %left 'INTEROGACION' cast
@@ -173,15 +173,12 @@ execute : EXECUTE llamada_metodo PUNTOYCOMA     { $$ = new Execute($2, @1.first_
 ;
 
 cuerpo : print                  { $$ = $1 }
+    | llamada_metodo            { $$ = $1 }
     | incre_decre               { $$ = $1 }
     | declarar_vector           { $$ = $1 }
     | variables                 { $$ = $1 }
     | casteos                   { $$ = $1 }
     | sentencias_contro         { $$ = $1 }
-    | error PYC 	        { var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
-                            console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
-    | error LLAVE_C 	        { var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
-                            console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
 variables : INT rep_iden PUNTOYCOMA                                     { $$ = new Declarar($2, TipoDato.INT, "ERROR_1", @1.first_line, @1.first_column); }
@@ -267,7 +264,7 @@ llamada_metodo :  ID  PARENTESIS_A PARENTESIS_C   { $$ = new CallFuncion($1, nul
 sentencias_contro : BREAK PUNTOYCOMA        { $$ = new Break(@1.first_line, @1.first_column);}
     | RETURN expresion PUNTOYCOMA           { $$ = new Return($2, @1.first_line, @1.first_column); }
     | RETURN PUNTOYCOMA                     { $$ = new Return(null, @1.first_line, @1.first_column); }
-    | CONTINUE PUNTOYCOMA                   { }
+    | CONTINUE PUNTOYCOMA                   { $$ = new Continue(@1.first_line, @1.first_column); }
 ;
 
 ternario : expresion INTEROGACION expresion DOSPUNTOS expresion     { $$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column); }

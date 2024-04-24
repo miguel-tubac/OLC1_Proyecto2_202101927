@@ -17,23 +17,49 @@ class Print extends Instruccion{
             if (this.expresion.tipo == TipoDato.ID){
                 if (this.endl == null){
                     let dato = entorno.getSimbolo(this.expresion.valor);
-                    Print.valorTexto += dato.valor.toString();
-                    return;
+                    if(Array.isArray(dato.valor)){
+                        Print.valorTexto += JSON.stringify(dato.valor);
+                        return;
+                    }
+                    else{
+                        Print.valorTexto += dato.valor.toString();
+                        return;
+                    }
                 }
                 else{
                     let dato = entorno.getSimbolo(this.expresion.valor);
-                    Print.valorTexto += dato.valor.toString() + "\n";
-                    return;
+                    if(Array.isArray(dato.valor)){
+                        Print.valorTexto += JSON.stringify(dato.valor)+ "\n";
+                        return;
+                    }
+                    else{
+                        Print.valorTexto += dato.valor.toString()+ "\n";
+                        return;
+                    }
                 }
             }
             else{
                 if (this.endl == null){
-                    Print.valorTexto += valor.valor.toString();
-                    return;
+                    //Print.valorTexto += valor.valor.toString();
+                    if(Array.isArray(valor.valor)){
+                        Print.valorTexto += JSON.stringify(valor.valor);
+                        return;
+                    }
+                    else{
+                        Print.valorTexto += valor.valor.toString();
+                        return;
+                    }
                 }
                 else{
-                    Print.valorTexto += valor.valor.toString() + "\n";
-                    return;
+                    //Print.valorTexto += valor.valor.toString() + "\n";
+                    if(Array.isArray(valor.valor)){
+                        Print.valorTexto += JSON.stringify(valor.valor)+ "\n";
+                        return;
+                    }
+                    else{
+                        Print.valorTexto += valor.valor.toString()+ "\n";
+                        return;
+                    }
                 }   
             }
         }
@@ -46,6 +72,11 @@ class Print extends Instruccion{
     }
 
     static obtenerValorTexto() {
+        return Print.valorTexto; // Método estático para obtener el valor de texto
+    }
+
+    static reiniciarValorTexto() {
+        Print.valorTexto = "";
         return Print.valorTexto; // Método estático para obtener el valor de texto
     }
 }

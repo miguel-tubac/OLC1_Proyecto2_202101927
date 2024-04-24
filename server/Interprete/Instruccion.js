@@ -23,7 +23,8 @@ const TipoInst = {
     BREAK: 'BREAK',
     RETURN: 'RETURN',
     FUNCION: 'FUNCION',
-    EXECUTE: 'EXECUTE'
+    EXECUTE: 'EXECUTE',
+    CONTINUE: 'CONTINUE'
 }
 
 module.exports = {Instruccion, TipoInst};

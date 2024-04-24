@@ -7,26 +7,23 @@ const Print = require("../Interprete/instruccion/Print.js");
 
 let entrada = `
 
-void hola_mundo(bool c){
-	int der = 23;
-	int ser = 2;
-    cout << der + ser << endl;
-	cout << hola() << endl;
-}
-
-void hola( ){
-    cout << "5555" << endl;
-}
-
 execute hola_mundo();
+
+void hola_mundo(){
+    int a;
+	cout << a << endl;
+    cout << "Hola";
+}
+
+
 
 `;
 
-var devuelve = "";
+//var devuelve = "";
 let resultado = Analizar.parse(entrada);
 //console.log(resultado);
 let entonoGlobal = new Entorno("GLOBAL", null);
-//console.log(resultado);
+console.log(resultado);
 
 //let reult = [EXECUTE, FUNCION, ASIGNACION, ASIGNACION, FUNCION]
 //console.log(resultado.length);
@@ -37,6 +34,7 @@ for (let i =0; i< resultado.length; i ++){
         resultado[i].interpretar(entonoGlobal);
 		//console.log("Interpretando1: " + resultado[i]);
         //console.log(resultado[i]);
+		//console.log(resultado[i].instrucciones[i]);
 	}
 }
 
@@ -47,7 +45,7 @@ for (let i =0; i< resultado.length; i ++){
 	if(resultado[i].tipo =="EXECUTE" && !executeIniciado){
         resultado[i].interpretar(entonoGlobal);
 		executeIniciado = true;
-		//console.log("Interpretando2: " + resultado[i]);
+		//console.log(resultado[i]);
 	}
 	//Aca es cuando salga otro execute
 	else if (resultado[i].tipo == "EXECUTE" && executeIniciado){
@@ -57,29 +55,3 @@ for (let i =0; i< resultado.length; i ++){
 
 console.log(Print.obtenerValorTexto());
 
-
-// // Esta es la pasada para obtener los datos de imprecion:
-// let parcial;
-// resultado.forEach(element => {
-//     parcial = element;
-//     //console.log(parcial);
-//     if (parcial.tipo === "PRINT"){
-//         if (parcial.endl == TipoDato.ENDL){
-//             //Aca se evalua para que pueda imprimir un areglo
-//             if (Array.isArray(parcial.expresion.valor)){
-//                 devuelve += JSON.stringify(parcial.expresion.valor)+ "\n";
-//             }
-//             else{
-//                 devuelve += parcial.expresion.valor + "\n";
-//             }
-//         }
-//         else if(Array.isArray(parcial.expresion.valor)){
-//             devuelve += JSON.stringify(parcial.expresion.valor)
-//         }
-//         else{
-//             devuelve += parcial.expresion.valor;
-//         }
-//     }
-// });
-
-// console.log(devuelve);

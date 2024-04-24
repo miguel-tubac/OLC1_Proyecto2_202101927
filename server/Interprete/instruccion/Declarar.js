@@ -13,6 +13,8 @@ class Declarar extends Instruccion{
 
     interpretar(entorno){
         let comprovacion = false;
+        let esFuncion = false;
+        let resFuncion;
         if (this.expresion === "RENOMBRAR" || this.expresion === "ERROR_1" || this.expresion === "ERROR_2" || this.expresion === "ERROR_3" || this.expresion === "ERROR_4" || this.expresion === "ERROR_5"){
             //Aca se deja comentado
         }else{
@@ -20,10 +22,18 @@ class Declarar extends Instruccion{
         }
         try {
             this.expresion.interpretar(entorno)
+            resFuncion = entorno.getFuncion(this.expresion.nombre);
+            if (resFuncion.tipo != TipoDato.ERROR){
+                esFuncion = true
+            }
+            //console.log(resFuncion);
             comprovacion = true;
         } catch (error) {
             comprovacion = false;
         }
+        // console.log(this.expresion );
+        //     console.log(this.id);
+        //     console.log(this.tipo);
             
         //this.id.interpretar(entorno);
         // Delclaracion del tipo: int a,d,f;
@@ -51,44 +61,61 @@ class Declarar extends Instruccion{
         }
         //Todo paso "3" este es el caso en donde se asigna un vector: int nuevo2 = dato3[1]; 
         else if (comprovacion && this.tipo === TipoDato.INT){
-            console.log("Hola 1");
-            let vector = this.expresion.interpretar(entorno);
-            let valor_vector = entorno.getSimbolo(vector.id);
-            // Aca es cuando el valor es un vector
-            if(vector.expresion2 === "null"){
-                //Aca se evalua un dato de tipo numero por parametro: vector.expresion.tipo == TipoDato.INT
-                if(valor_vector.tipo == TipoDato.INT && vector.expresion.tipo == TipoDato.INT){
-                    //Se recorre el arreglo con datos
-                    for(let i = 0; i< valor_vector.valor.length; i++){
-                        // Se busca la posicion en donde se manda en la exprecion
-                        if(vector.expresion.valor == i){
-                            //Se agrega el valor
-                            this.id.forEach(element => {
-                                entorno.addSimbolo(element.interpretar(entorno).valor, Number(valor_vector.valor[i]), this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
-                            });
-                            return this;
+            //console.log("Hola 122");
+            // Aca se evalua la asociasion de una variable int a el resultado de una funcion int
+            if(esFuncion == true){
+                // console.log(this.expresion.interpretar(entorno));
+                // console.log(resFuncion.instrucciones);
+                for (let i=0; i<resFuncion.instrucciones.length; i++){
+                    resFuncion.instrucciones[i].expresion.interpretar.valor = this.expresion.parametros[i].valor;
+                    // entorno.addSimbolo(this.id[i].valor, resFuncion.instrucciones[i].expresion.valor, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+                    // resFuncion.instrucciones[i].expresion.interpretar(entorno);
+                    // this.expresion.interpretar(entorno)
+                    entorno.addSimbolo(this.id[i].valor, resFuncion.instrucciones[i].expresion.valor, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+                }
+                
+                return this;
+            }
+            else if (esFuncion = false){
+                let vector = this.expresion.interpretar(entorno);
+                let valor_vector = entorno.getSimbolo(vector.id);
+                // Aca es cuando el valor es un vector
+                if(vector.expresion2 === "null"){
+                    //Aca se evalua un dato de tipo numero por parametro: vector.expresion.tipo == TipoDato.INT
+                    if(valor_vector.tipo == TipoDato.INT && vector.expresion.tipo == TipoDato.INT){
+                        //Se recorre el arreglo con datos
+                        for(let i = 0; i< valor_vector.valor.length; i++){
+                            // Se busca la posicion en donde se manda en la exprecion
+                            if(vector.expresion.valor == i){
+                                //Se agrega el valor
+                                this.id.forEach(element => {
+                                    entorno.addSimbolo(element.interpretar(entorno).valor, Number(valor_vector.valor[i]), this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+                                });
+                                return this;
+                            }
+                        }
+                    }
+                    //Aca se evalua un dato de tipo id por parametro: vector.expresion.tipo == TipoDato.ID
+                    else if(valor_vector.tipo == TipoDato.INT && vector.expresion.tipo == TipoDato.ID){
+                        //Se recorre el arreglo con datos
+                        for(let i = 0; i< valor_vector.valor.length; i++){
+                            // Se busca la posicion en donde se manda en la exprecion
+                            if(entorno.getSimbolo(vector.expresion.valor).valor == i){
+                                //Se agrega el valor, y se recorre porque es un arreglo []
+                                this.id.forEach(element => {
+                                    entorno.addSimbolo(element.interpretar(entorno).valor, Number(valor_vector.valor[i]), this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+                                });
+                                return this;
+                            }
                         }
                     }
                 }
-                //Aca se evalua un dato de tipo id por parametro: vector.expresion.tipo == TipoDato.ID
-                else if(valor_vector.tipo == TipoDato.INT && vector.expresion.tipo == TipoDato.ID){
-                    //Se recorre el arreglo con datos
-                    for(let i = 0; i< valor_vector.valor.length; i++){
-                        // Se busca la posicion en donde se manda en la exprecion
-                        if(entorno.getSimbolo(vector.expresion.valor).valor == i){
-                            //Se agrega el valor, y se recorre porque es un arreglo []
-                            this.id.forEach(element => {
-                                entorno.addSimbolo(element.interpretar(entorno).valor, Number(valor_vector.valor[i]), this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
-                            });
-                            return this;
-                        }
-                    }
+                //Aca es cuando es una lista
+                else if(vector.expresion2 != "null"){
+                    //aca el doble expresion
                 }
             }
-            //Aca es cuando es una lista
-            else if(vector.expresion2 != "null"){
-                //aca el doble expresion
-            }
+            console.log("2222");
             return this;
             //----------Fin-----
         }

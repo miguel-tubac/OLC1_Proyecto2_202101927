@@ -17,11 +17,14 @@ class CallFuncion extends Expresion{
         let entornoParametros = new Entorno(TipoInst.FUNCION, entorno);
         let entornoFuncion = new Entorno(TipoInst.FUNCION, entornoParametros);
         let funcion = entorno.getFuncion(this.nombre);
-
+        //console.log(this.parametros);
         // Aca se comprueba que no se le pasaron parametros
         if(this.parametros != null){
             //Paso 1: Actualizar los parametros
             for (let i = 0; i < this.parametros.length; i++){
+                // console.log(this.nombre);
+                // console.log(funcion.parametros[i]);
+                // console.log(this.parametros[i].interpretar(entornoFuncion));
                 if (funcion.parametros[i].tipo == this.parametros[i].interpretar(entornoFuncion).tipo){
                     entornoParametros.addSimbolo(funcion.parametros[i].valor, this.parametros[i].interpretar(entornoFuncion).valor, funcion.parametros[i].tipo, TipoSimbolo.VARIABLE, this.fila, this.columna)
                     funcion.parametros[i].valor = this.parametros[i].interpretar(entornoFuncion).valor;
@@ -54,12 +57,20 @@ class CallFuncion extends Expresion{
         for (let i = 0; i < funcion.instrucciones.length; i++){
             let instruccion = funcion.instrucciones[i];
             instruccion.interpretar(entornoFuncion);
-            //console.log(instruccion.tipo);
+            //console.log(instruccion);
             //instruccion.interpretar(entornoFuncion).expresion;
             if(instruccion.tipo === TipoInst.RETURN){
-                console.log("AQUI");
-                this.valor = instruccion.expresion;
-                this.tipo = instruccion.expresion.tipo;
+                instruccion.interpretar(entornoFuncion);
+                //console.log("AQUI");
+                // this.valor = instruccion.expresion;
+                // this.tipo = instruccion.expresion.tipo;
+                // if (this.tipo == TipoDato.ID){
+                //     this.valor = entornoFuncion.getSimbolo(instruccion.expresion.valor);
+                //     this.tipo = entornoFuncion.getSimbolo(instruccion.expresion.valor);
+                // }
+                // console.log(this.valor);
+                //console.log(instruccion.interpretar(entornoFuncion));
+                
                 return this;
             }
         }
