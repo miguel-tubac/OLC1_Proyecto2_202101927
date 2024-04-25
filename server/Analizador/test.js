@@ -19,6 +19,7 @@ void hola_mundo(){
 	//dato3 [0] = dato4 [a];
 	//cout << a << endl;
     cout << a;
+	cout << ws;
 }
 
 
