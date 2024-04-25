@@ -10,48 +10,64 @@ let entrada = `
 execute hola_mundo();
 
 void hola_mundo(){
-    int a;
-	cout << a << endl;
-    cout << "Hola";
+	//bool dato3 [] = [true, false];
+	std::string dato3 [] = ["miguel", "Hola"];
+	//int dato4 [] = [5,6,7];
+    //int a = 1;
+	//asd;
+	dato3 [0] = dato3 [1];
+	//dato3 [0] = dato4 [a];
+	//cout << a << endl;
+    cout << a;
 }
 
 
 
 `;
 
-//var devuelve = "";
 let resultado = Analizar.parse(entrada);
 //console.log(resultado);
 let entonoGlobal = new Entorno("GLOBAL", null);
-console.log(resultado);
+//console.log(resultado);
 
-//let reult = [EXECUTE, FUNCION, ASIGNACION, ASIGNACION, FUNCION]
-//console.log(resultado.length);
-for (let i =0; i< resultado.length; i ++){
-    //console.log(resultado[i]);
+resultado.Resultado.forEach(element => {
+	//console.log(resultado[i]);
 	//Aca afura se interpreta todo lo que no se execute
-	if(resultado[i].tipo != "EXECUTE"){
-        resultado[i].interpretar(entonoGlobal);
+	if(element.tipo != "EXECUTE"){
+        element.interpretar(entonoGlobal);
 		//console.log("Interpretando1: " + resultado[i]);
         //console.log(resultado[i]);
 		//console.log(resultado[i].instrucciones[i]);
 	}
-}
+});
+
 
 let executeIniciado = false;
-for (let i =0; i< resultado.length; i ++){
-    //resultado[i].interpretar(entonoGlobal);
+resultado.Resultado.forEach(element => {
+	//resultado[i].interpretar(entonoGlobal);
 	//Aca afura se interpreta todo lo que no se execute
-	if(resultado[i].tipo =="EXECUTE" && !executeIniciado){
-        resultado[i].interpretar(entonoGlobal);
+	if(element.tipo =="EXECUTE" && !executeIniciado){
+        element.interpretar(entonoGlobal);
 		executeIniciado = true;
 		//console.log(resultado[i]);
 	}
 	//Aca es cuando salga otro execute
-	else if (resultado[i].tipo == "EXECUTE" && executeIniciado){
+	else if (element.tipo == "EXECUTE" && executeIniciado){
 		console.log("Error semnatico solo puede aver un execute"); 
 	}
-}
+});
+
+resultado.Errores.forEach(element => {
+	Print.agregarTexto(element.tipo +": "+ element.descripcion +" linea "+ element.linea +" columna "+ element.columna);
+	//Errores: 
+	// 	Errores {
+	// 	  tipo: 'Error Sintáctico',
+	// 	  descripcion: 'Recuperado con: ;',
+	// 	  linea: 6,
+	// 	  columna: 5
+	// 	}
+	// ]
+});
 
 console.log(Print.obtenerValorTexto());
 

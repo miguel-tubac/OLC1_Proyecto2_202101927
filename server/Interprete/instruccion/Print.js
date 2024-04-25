@@ -79,6 +79,11 @@ class Print extends Instruccion{
         Print.valorTexto = "";
         return Print.valorTexto; // Método estático para obtener el valor de texto
     }
+
+    static agregarTexto(dato) {
+        Print.valorTexto += dato ;
+        return;
+    }
 }
 
 module.exports = Print;

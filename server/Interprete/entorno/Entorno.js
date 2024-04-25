@@ -1,6 +1,7 @@
 const {Simbolo} = require("./Simbolo");
 const {Expresion, TipoDato} = require("../Expresion");
 const { TipoInst } = require("../Instruccion");
+const Print = require("../instruccion/Print.js");
 
 class Entorno{
 
@@ -15,6 +16,7 @@ class Entorno{
     addSimbolo(nombre, valor, tipo, tipoVar, fila, columna){
         if(nombre in this.tablaSim){
             console.log("Semantico: Variable ya declarada");
+            Print.agregarTexto("Error Semántico: variable ya declarada"+" linea "+ fila +" columna "+ columna);
             return;
         }
 
@@ -31,7 +33,9 @@ class Entorno{
             }
         }
         //console.log("Semantico: variable no existe");
+        Print.agregarTexto("Error Semántico: variable no encontrada");
         return new Expresion("ERROR", TipoDato.ERROR, 0, 0);
+
         //Aca retornar un error
     }
 
@@ -43,6 +47,7 @@ class Entorno{
             simbolo.columna = columna;
         } else {
             console.log("Error Semantico: variable no existe en la asignacion.");
+            Print.agregarTexto("Error Semántico: variable no existe en la asignacion"+" linea "+ fila +" columna "+ columna);
             return;
         }
     }
@@ -52,6 +57,7 @@ class Entorno{
     addFuncion(nombre, instrucciones, fila, columna){
         if(nombre in this.tablaFunc){
             console.log("Semantico: Funcion o metodo ya declarada");
+            Print.agregarTexto("Error Semántico: Funcion o metodo ya declarada"+" linea "+ fila +" columna "+ columna);
             return;
         }
         this.tablaFunc[nombre] =  instrucciones;    //new Simbolo(nombre, instrucciones,  tipo, fila, columna)
@@ -67,6 +73,7 @@ class Entorno{
             }
         }
         //console.log("Semantico: variable no existe");
+        Print.agregarTexto("Error Semántico: funcion o metodo no encontrado");
         return new Expresion("ERROR", TipoDato.ERROR, 0, 0);
         //Aca retornar un error
     }

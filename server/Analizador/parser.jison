@@ -151,21 +151,21 @@ id [a-zA-Z][a-zA-Z0-9_]*;
 
 %% // ------> Gramatica
 
-inicio : lista_instrucciones EOF { var final={'errores': listaDeErrores}; $$ = $1, final; listaDeErrores=[] ; return $$; }
-                                //var final={'errores': listaDeErrores}; listaDeErrores=[]; return final;
+inicio : lista_instrucciones EOF { var final={'Errores': listaDeErrores, 'Resultado': $1}; listaDeErrores=[]; return final; }
+                                //var final={'errores': listaDeErrores}; $$ = $1, final; listaDeErrores=[] ; return $$;
 ;
 
 lista_instrucciones : lista_instrucciones instruccion        { $$ = $1; $$.push($2); }
-    | instruccion                   { $$ = []; $$.push($1); } //aqui se crea una lista de instrucciones y las cuales posteriormente se recorren
+    | instruccion    { $$ = []; $$.push($1); } //aqui se crea una lista de instrucciones y las cuales posteriormente se recorren
 ;
 
 instruccion :  delcarar_metodo       { $$ = $1 }
     | variables             { $$ = $1 }
     | casteos               { $$ = $1 }
     | execute               {$$ = $1}
-	| error PYC 	        { var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
+	| error PUNTOYCOMA	        {$$ = ""; var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
                             console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
-    | error LLAVE_C 	    { var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
+    | error LLAVE_C	    {$$ = ""; var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
                             console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
@@ -179,6 +179,8 @@ cuerpo : print                  { $$ = $1 }
     | variables                 { $$ = $1 }
     | casteos                   { $$ = $1 }
     | sentencias_contro         { $$ = $1 }
+    | error PUNTOYCOMA	        {$$ = []; var nuevo_error = new Error("Error Sintáctico","Recuperado con: "+yytext, this._$.first_line, this._$.first_column); listaDeErrores.push(nuevo_error);
+                            console.error('Error sintáctico: ' + yytext + ',  linea: ' + this._$.first_line + ', columna: ' + this._$.first_column);}
 ;
 
 variables : INT rep_iden PUNTOYCOMA                                     { $$ = new Declarar($2, TipoDato.INT, "ERROR_1", @1.first_line, @1.first_column); }
@@ -217,8 +219,25 @@ incre_decre : ID MAS MAS PUNTOYCOMA         { $$ = new Incre_Decre($1, "++", @1.
 ;
 
 declarar_vector : INT rep_iden CORCHETE_A CORCHETE_C IGUAL NEW INT CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   { $$ = new Vectores($2, TipoDato.INT, $9, @1.first_line, @1.first_column); }
+    | INT rep_iden CORCHETE_A CORCHETE_C IGUAL CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   { $$ = new Vectores($2, TipoDato.INT, $7, @1.first_line, @1.first_column); }
     | INT rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL NEW INT CORCHETE_A lista_valores CORCHETE_C CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   {  }
-    | INT rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL NEW INT CORCHETE_A CORCHETE_A lista_valores CORCHETE_C CORCHETE_C CORCHETE_A CORCHETE_A  lista_valores CORCHETE_C CORCHETE_C PUNTOYCOMA   {  }
+    | INT rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL CORCHETE_A CORCHETE_A lista_valores CORCHETE_C COMA CORCHETE_A lista_valores CORCHETE_C CORCHETE_C PUNTOYCOMA   {  }
+    | DOUBLE rep_iden CORCHETE_A CORCHETE_C IGUAL NEW DOUBLE CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   { $$ = new Vectores($2, TipoDato.DOUBLE, $9, @1.first_line, @1.first_column); }
+    | DOUBLE rep_iden CORCHETE_A CORCHETE_C IGUAL CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   { $$ = new Vectores($2, TipoDato.DOUBLE, $7, @1.first_line, @1.first_column); }
+    | DOUBLE rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL NEW DOUBLE CORCHETE_A lista_valores CORCHETE_C CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   {  }
+    | DOUBLE rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL CORCHETE_A CORCHETE_A lista_valores CORCHETE_C COMA CORCHETE_A lista_valores CORCHETE_C CORCHETE_C PUNTOYCOMA   {  }
+    | BOOL rep_iden CORCHETE_A CORCHETE_C IGUAL NEW BOOL CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   { $$ = new Vectores($2, TipoDato.BOOLEAN, $9, @1.first_line, @1.first_column); }
+    | BOOL rep_iden CORCHETE_A CORCHETE_C IGUAL CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   { $$ = new Vectores($2, TipoDato.BOOLEAN, $7, @1.first_line, @1.first_column); }
+    | BOOL rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL NEW BOOL CORCHETE_A lista_valores CORCHETE_C CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   {  }
+    | BOOL rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL CORCHETE_A CORCHETE_A lista_valores CORCHETE_C COMA CORCHETE_A lista_valores CORCHETE_C CORCHETE_C PUNTOYCOMA   {  }
+    | CHAR rep_iden CORCHETE_A CORCHETE_C IGUAL NEW CHAR CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   { $$ = new Vectores($2, TipoDato.CHAR, $9, @1.first_line, @1.first_column); }
+    | CHAR rep_iden CORCHETE_A CORCHETE_C IGUAL CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   { $$ = new Vectores($2, TipoDato.CHAR, $7, @1.first_line, @1.first_column); }
+    | CHAR rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL NEW CHAR CORCHETE_A lista_valores CORCHETE_C CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   {  }
+    | CHAR rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL CORCHETE_A CORCHETE_A lista_valores CORCHETE_C COMA CORCHETE_A lista_valores CORCHETE_C CORCHETE_C PUNTOYCOMA   {  }
+    | STD DOBLEDOSPUNTOS STRING rep_iden CORCHETE_A CORCHETE_C IGUAL NEW STD DOBLEDOSPUNTOS STRING CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   { $$ = new Vectores($4, TipoDato.CADENA, $13, @1.first_line, @1.first_column); }
+    | STD DOBLEDOSPUNTOS STRING rep_iden CORCHETE_A CORCHETE_C IGUAL CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   { $$ = new Vectores($4, TipoDato.CADENA, $9, @1.first_line, @1.first_column); }
+    | STD DOBLEDOSPUNTOS STRING rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL NEW STD DOBLEDOSPUNTOS STRING CORCHETE_A lista_valores CORCHETE_C CORCHETE_A lista_valores CORCHETE_C PUNTOYCOMA   {  }
+    | STD DOBLEDOSPUNTOS STRING rep_iden CORCHETE_A CORCHETE_C CORCHETE_A CORCHETE_C IGUAL CORCHETE_A CORCHETE_A lista_valores CORCHETE_C COMA CORCHETE_A lista_valores CORCHETE_C CORCHETE_C PUNTOYCOMA   {  }
     | ID CORCHETE_A expresion CORCHETE_C IGUAL expresion PUNTOYCOMA     { $$ = new ReasignarVector($1, $3, $6, @1.first_line, @1.first_column); }
 ;
 

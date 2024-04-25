@@ -26,13 +26,14 @@ class Vectores extends Instruccion{
                 id = element.interpretar(entorno).valor;
             });
             //console.log(id);
+            //*************************************************Todos los tipos se validan */
             // ----------------El areglo recibe un numero
-            if(this.tipo == TipoDato.INT && exprecion_valor.tipo == TipoDato.INT){
+            if(this.tipo == TipoDato.INT || this.tipo == TipoDato.DOUBLE || this.tipo == TipoDato.BOOLEAN || this.tipo == TipoDato.CHAR || this.tipo == TipoDato.CADENA && exprecion_valor.tipo == TipoDato.INT){
                 entorno.addSimbolo(id, Array(Number(exprecion_valor.valor)), this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna);
                 return this;
             }
             // ---------------El areglo recibe una variable
-            else if(this.tipo == TipoDato.INT && exprecion_valor.tipo == TipoDato.ID && entorno.getSimbolo(exprecion_valor.valor).tipo == TipoDato.INT){
+            else if(this.tipo == TipoDato.INT || this.tipo == TipoDato.DOUBLE || this.tipo == TipoDato.BOOLEAN || this.tipo == TipoDato.CHAR || this.tipo == TipoDato.CADENA && exprecion_valor.tipo == TipoDato.ID && entorno.getSimbolo(exprecion_valor.valor).tipo == TipoDato.INT){
                 entorno.addSimbolo(id, Array(Number(entorno.getSimbolo(exprecion_valor.valor).valor)), this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna);
                 return this;
             }
@@ -52,7 +53,7 @@ class Vectores extends Instruccion{
                 id = element.interpretar(entorno).valor;
             });
             //console.log(id);
-            //---------Se evalua el tipo entero:
+            //************************************************Tipo int */
             if (this.tipo == TipoDato.INT){
                 // Se recorre el arreglo de la expresion
                 for (let i = 0; i < this.expresion.length; i++) {
@@ -74,6 +75,109 @@ class Vectores extends Instruccion{
                     }
                     else {
                         break; // Si el tipo no es INT, salir del bucle
+                    }
+                }
+            }
+            //************************************************Tipo double */
+            else if (this.tipo == TipoDato.DOUBLE){
+                // Se recorre el arreglo de la expresion
+                for (let i = 0; i < this.expresion.length; i++) {
+                    //Aca se evalua el tipo de expresion es un entero
+                    if (this.expresion[i].interpretar(entorno).tipo == TipoDato.DOUBLE) { 
+                        exprecion_valor.push(Number(this.expresion[i].interpretar(entorno).valor));
+                        if(i == this.expresion.length -1){
+                            entorno.addSimbolo(id, exprecion_valor, this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna);
+                            return this;
+                        }
+                    } 
+                    //Aca se evalua el tipo de expresion es un ID y el mismo es un entero
+                    else if(this.expresion[i].interpretar(entorno).tipo == TipoDato.ID && entorno.getSimbolo(this.expresion[i].interpretar(entorno).valor).tipo == TipoDato.DOUBLE){
+                        exprecion_valor.push(Number(entorno.getSimbolo(this.expresion[i].interpretar(entorno).valor).valor));
+                        if(i == this.expresion.length -1){
+                            entorno.addSimbolo(id, exprecion_valor, this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna);
+                            return this;
+                        }
+                    }
+                    else {
+                        break; // Si el tipo no es Doubel, salir del bucle
+                    }
+                }
+            }
+            //************************************************Tipo Bolean */
+            else if (this.tipo == TipoDato.BOOLEAN){
+                // Se recorre el arreglo de la expresion
+                for (let i = 0; i < this.expresion.length; i++) {
+                    let datoBool;
+                    //Aca se evalua el tipo de expresion es un entero
+                    if (this.expresion[i].interpretar(entorno).tipo == TipoDato.BOOLEAN) {
+                        if(String(this.expresion[i].interpretar(entorno).valor).toLocaleLowerCase() == "true") datoBool = true;
+                        else if(String(this.expresion[i].interpretar(entorno).valor).toLocaleLowerCase() == "false") datoBool = false;
+                        exprecion_valor.push(datoBool);
+                        if(i == this.expresion.length -1){
+                            entorno.addSimbolo(id, exprecion_valor, this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna);
+                            return this;
+                        }
+                    } 
+                    //Aca se evalua el tipo de expresion es un ID y el mismo es un entero
+                    else if(this.expresion[i].interpretar(entorno).tipo == TipoDato.ID && entorno.getSimbolo(this.expresion[i].interpretar(entorno).valor).tipo == TipoDato.BOOLEAN){
+                        exprecion_valor.push((entorno.getSimbolo(this.expresion[i].interpretar(entorno).valor).valor));
+                        if(i == this.expresion.length -1){
+                            entorno.addSimbolo(id, exprecion_valor, this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna);
+                            return this;
+                        }
+                    }
+                    else {
+                        break; // Si el tipo no es Doubel, salir del bucle
+                    }
+                }
+            }
+            //************************************************Tipo Char */
+            else if (this.tipo == TipoDato.CHAR){
+                // Se recorre el arreglo de la expresion
+                for (let i = 0; i < this.expresion.length; i++) {
+                    //Aca se evalua el tipo de expresion es un entero
+                    if (this.expresion[i].interpretar(entorno).tipo == TipoDato.CHAR) {
+                        exprecion_valor.push(String(this.expresion[i].interpretar(entorno).valor));
+                        if(i == this.expresion.length -1){
+                            entorno.addSimbolo(id, exprecion_valor, this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna);
+                            return this;
+                        }
+                    } 
+                    //Aca se evalua el tipo de expresion es un ID y el mismo es un entero
+                    else if(this.expresion[i].interpretar(entorno).tipo == TipoDato.ID && entorno.getSimbolo(this.expresion[i].interpretar(entorno).valor).tipo == TipoDato.CHAR){
+                        exprecion_valor.push((entorno.getSimbolo(this.expresion[i].interpretar(entorno).valor).valor));
+                        if(i == this.expresion.length -1){
+                            entorno.addSimbolo(id, exprecion_valor, this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna);
+                            return this;
+                        }
+                    }
+                    else {
+                        break; // Si el tipo no es Doubel, salir del bucle
+                    }
+                }
+            }
+            //************************************************Tipo Cadena */
+            else if (this.tipo == TipoDato.CADENA){
+                // Se recorre el arreglo de la expresion
+                for (let i = 0; i < this.expresion.length; i++) {
+                    //Aca se evalua el tipo de expresion es un entero
+                    if (this.expresion[i].interpretar(entorno).tipo == TipoDato.CADENA) {
+                        exprecion_valor.push(String(this.expresion[i].interpretar(entorno).valor));
+                        if(i == this.expresion.length -1){
+                            entorno.addSimbolo(id, exprecion_valor, this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna);
+                            return this;
+                        }
+                    } 
+                    //Aca se evalua el tipo de expresion es un ID y el mismo es un entero
+                    else if(this.expresion[i].interpretar(entorno).tipo == TipoDato.ID && entorno.getSimbolo(this.expresion[i].interpretar(entorno).valor).tipo == TipoDato.CADENA){
+                        exprecion_valor.push((entorno.getSimbolo(this.expresion[i].interpretar(entorno).valor).valor));
+                        if(i == this.expresion.length -1){
+                            entorno.addSimbolo(id, exprecion_valor, this.tipo, TipoSimbolo.ARREGLO, this.fila, this.columna);
+                            return this;
+                        }
+                    }
+                    else {
+                        break; // Si el tipo no es Doubel, salir del bucle
                     }
                 }
             }
